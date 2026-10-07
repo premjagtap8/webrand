@@ -1,0 +1,199 @@
+/* ===== Our Services (matches OurServices.jsx class names) ===== */
+.os{
+  --os-indigo:var(--indigo,#4F46E5);
+  --os-muted:var(--muted,#6B6A85);
+  --os-tint:var(--tint,#EEEDFD);
+  --os-ease:var(--ease,cubic-bezier(.22,1,.36,1));
+  --os-ink:#0E0D1F;
+  --os-line:#E3E0F7;
+  --os-pad:18px;                                                                /* card padding: one knob for density */
+
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;   /* fixes the serif fallback; move to body when you can */
+  background:#F6F5F1;                                                          /* keep your existing section background if different */
+  padding:clamp(36px,5vw,64px) 0;                                              /* was up to 80px */
+}
+.os__inner{margin-inline:auto;padding-inline:clamp(16px,3vw,32px)}   /* same container as Hero / What We Do */
+
+/* ---------- Header: centred and compact ---------- */
+.os__head{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:16px;                                                                    /* was 22px */
+  margin-bottom:clamp(20px,3vw,32px);                                          /* was up to 44px */
+}
+.os__pill{
+  display:inline-flex;align-items:center;padding:6px 14px;border:1px solid #D7D4EE;border-radius:999px;
+  background:#fff;color:var(--os-indigo);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+}
+.os__title{
+  margin-top:12px;                                                             /* was 16px */
+  font-size:clamp(28px,3.6vw,40px);                                            /* was up to 48px */
+  line-height:1.1;letter-spacing:-.03em;font-weight:600;color:var(--os-ink);text-wrap:balance;
+}
+.os__accent{
+  background:linear-gradient(90deg,var(--os-indigo),#8B5CF6 60%,#06B6D4);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.os__sub{
+  margin:10px auto 0;                                                          /* was 14px */
+  max-width:44em;                                                              /* was 34em: stays on one line on desktop */
+  color:var(--os-muted);font-size:clamp(14.5px,1.1vw,16.5px);line-height:1.5;text-wrap:balance;
+}
+
+.os__all{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;   /* was 11px 20px */
+  background:#fff;border:1px solid #D7D4EE;color:var(--os-ink);font-size:14px;font-weight:500;text-decoration:none;
+  transition:transform .25s var(--os-ease),box-shadow .25s,border-color .25s,color .25s;
+}
+.os__all svg{transition:transform .3s var(--os-ease)}
+.os__all:hover{
+  transform:translateY(-2px);border-color:var(--os-indigo);color:var(--os-indigo);
+  box-shadow:0 10px 24px color-mix(in srgb,var(--os-indigo) 14%,transparent);
+}
+.os__all:hover svg{transform:translateX(4px)}
+.os__all:focus-visible{outline:2px solid var(--os-indigo);outline-offset:3px}
+
+/* ---------- Grid: 4 x 2 ---------- */
+.os__grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1.2vw,16px)}
+.os__item{display:flex;min-width:0}          /* li stretches to row height; child fills it */
+.os__item>*{flex:1}
+
+/* ---------- Card ----------
+   Icon sits beside the title (grid), so the card is about 40px shorter than the old stacked layout. */
+.os-card{
+  position:relative;isolation:isolate;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  grid-template-rows:auto auto 1fr auto;     /* title row, description, tags (takes spare height), footer */
+  column-gap:12px;
+  align-items:center;
+  padding:var(--os-pad);                                                       /* was 22px */
+  border-radius:18px;                                                          /* was 20px */
+  background:linear-gradient(180deg,#fff,#FBFAFF);
+  border:1px solid var(--os-line);
+  color:inherit;text-decoration:none;
+  transition:transform .35s var(--os-ease),box-shadow .35s,border-color .3s;
+}
+.os-card__icon{
+  grid-column:1;grid-row:1;
+  width:36px;height:36px;border-radius:11px;display:grid;place-items:center;  /* was 42px */
+  background:var(--os-tint);color:var(--os-indigo);
+  transition:background .3s,color .3s,transform .4s var(--os-ease);
+}
+.os-card__icon svg{width:18px;height:18px}                                     /* was 20px */
+.os-card__title{
+  grid-column:2;grid-row:1;margin:0;
+  font-size:17px;line-height:1.25;font-weight:600;letter-spacing:-.015em;color:var(--os-ink);   /* was 18px */
+  text-wrap:balance;
+}
+.os-card__desc{
+  grid-column:1 / -1;grid-row:2;align-self:start;
+  margin:10px 0 0;color:var(--os-muted);font-size:14px;line-height:1.45;text-wrap:pretty;        /* was 14.5px */
+}
+
+/* tags pinned to the bottom of the text block so the footer links line up across a row */
+.os-card__tags{
+  grid-column:1 / -1;grid-row:3;align-self:end;
+  display:flex;flex-wrap:wrap;gap:5px;padding-top:12px;                        /* was 14px */
+}
+.os-card__tag{
+  padding:3px 9px;border-radius:999px;background:#F1F0FB;color:#3B3A5A;
+  font-size:11.5px;font-weight:500;line-height:1.4;white-space:nowrap;
+}
+.os-card__tag--more{background:#fff;border:1px solid #D7D4EE;color:var(--os-muted)}
+
+/* footer row with divider (arrow slides on hover) */
+.os-card__link{
+  grid-column:1 / -1;grid-row:4;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:12px;padding-top:10px;border-top:1px solid #ECEAFA;               /* was 14px / 14px */
+  color:var(--os-indigo);font-size:13px;font-weight:500;line-height:1.3;
+}
+.os-card__link svg{flex:none;width:15px;height:15px;transition:transform .3s var(--os-ease)}
+
+/* cursor spotlight (--mx / --my come from trackPointer in the JSX) */
+.os-card::before{
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(360px circle at var(--mx,50%) var(--my,0%),color-mix(in srgb,var(--os-indigo) 10%,transparent),transparent 60%);
+}
+
+.os-card:hover,
+.os-card:focus-visible{
+  transform:translateY(-4px);                                                  /* was -5px */
+  border-color:var(--os-indigo);
+  box-shadow:0 16px 36px -10px color-mix(in srgb,var(--os-indigo) 24%,transparent);
+}
+.os-card:hover::before,
+.os-card:focus-visible::before{opacity:1}
+.os-card:hover .os-card__icon,
+.os-card:focus-visible .os-card__icon{background:var(--os-indigo);color:#fff;transform:rotate(-6deg) scale(1.06)}
+.os-card:hover .os-card__link svg,
+.os-card:focus-visible .os-card__link svg{transform:translateX(4px)}
+.os-card:active{transform:translateY(-2px) scale(.99)}
+.os-card:focus-visible{outline:2px solid var(--os-indigo);outline-offset:3px}
+
+/* ---------- CTA tile ---------- */
+.os-cta{
+  position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
+  padding:var(--os-pad);border-radius:18px;color:#fff;
+  background:
+    radial-gradient(90% 70% at 100% 0%,rgba(139,92,246,.55),transparent 60%),
+    linear-gradient(160deg,var(--os-indigo),#3B33B8);
+  transition:transform .35s var(--os-ease),box-shadow .35s;
+}
+.os-cta::after{
+  content:"";position:absolute;right:-60px;bottom:-60px;width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,.10);z-index:-1;transition:transform .6s var(--os-ease);
+}
+.os-cta__title{margin:0;font-size:clamp(18px,1.5vw,21px);line-height:1.2;font-weight:600;letter-spacing:-.02em;text-wrap:balance}
+.os-cta__desc{margin:0;color:rgba(255,255,255,.84);font-size:14px;line-height:1.45;text-wrap:pretty}
+.os-cta__btn{
+  align-self:flex-start;display:inline-flex;align-items:center;gap:8px;margin-top:6px;
+  padding:9px 16px;border-radius:999px;background:#fff;color:var(--os-indigo);                 /* was 11px 18px */
+  font-size:13.5px;font-weight:500;text-decoration:none;
+  transition:transform .25s var(--os-ease),box-shadow .25s;
+}
+.os-cta__btn svg{transition:transform .3s var(--os-ease)}
+.os-cta__btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.2)}
+.os-cta__btn:hover svg{transform:translateX(4px)}
+.os-cta__btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.os-cta:hover{transform:translateY(-4px);box-shadow:0 16px 36px -10px color-mix(in srgb,var(--os-indigo) 40%,transparent)}
+.os-cta:hover::after{transform:scale(1.25)}
+
+/* ---------- Staggered entrance (CSS only) ---------- */
+@keyframes os-rise{from{opacity:0;transform:translateY(24px)}}
+@media (prefers-reduced-motion:no-preference){
+  .os__item{animation:os-rise .65s var(--os-ease) backwards}
+  .os__item:nth-child(1){animation-delay:0s}
+  .os__item:nth-child(2){animation-delay:.06s}
+  .os__item:nth-child(3){animation-delay:.12s}
+  .os__item:nth-child(4){animation-delay:.18s}
+  .os__item:nth-child(5){animation-delay:.24s}
+  .os__item:nth-child(6){animation-delay:.30s}
+  .os__item:nth-child(7){animation-delay:.36s}
+  .os__item:nth-child(8){animation-delay:.42s}
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1100px){
+  .os__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .os__item:last-child{grid-column:span 2}
+  .os-cta{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .os-cta__btn{margin-top:0;align-self:center}
+}
+@media (max-width:600px){
+  .os__grid{grid-template-columns:1fr}
+  .os__item:last-child{grid-column:auto}
+  .os-cta{flex-direction:column;align-items:flex-start;justify-content:flex-end}
+  .os-cta__btn{align-self:flex-start}
+  .os__all{width:100%;justify-content:center}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .os-card:hover,
+  .os-card:focus-visible,
+  .os-cta:hover,
+  .os__all:hover,
+  .os-cta__btn:hover{transform:none}
+  .os-card:hover .os-card__icon,
+  .os-card:focus-visible .os-card__icon{transform:none}
+}

@@ -1,0 +1,159 @@
+/* ===== What We Do ===== */
+.what{
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; /* inherited by h2/h3/p/chips/links; move to body when you can */
+                          /* same cap as .hero so both sections share edges */
+  margin-inline:auto;
+  padding:clamp(36px,5vw,56px) clamp(16px,3vw,32px) clamp(32px,4vw,48px);   /* top was up to 72px */
+}
+
+/* ---- Section heading: compact, same scale as the other sections ----
+   (If .sec-head is shared with other sections, move these into that file instead.) */
+.what .sec-head{margin-bottom:clamp(20px,3vw,32px)}                          /* was up to 44px */
+.what .sec-head h2{
+  margin-top:14px;                                                           /* was 18px */
+  font-size:clamp(28px,3.6vw,40px);                                          /* caps the display size so it can't dominate */
+  line-height:1.1;letter-spacing:-.03em;font-weight:600;text-wrap:balance;
+}
+.what .sec-head h2 em{
+  font-style:normal;
+  background:linear-gradient(90deg,var(--indigo),#8B5CF6 60%,#06B6D4);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.what .sec-head p{
+  margin:10px auto 0;                                                        /* was 14px */
+  max-width:46em;                                                            /* was 36em: now 1-2 lines instead of 3 */
+  font-size:clamp(14.5px,1.1vw,16.5px);line-height:1.5;text-wrap:balance;
+}
+
+/* ---- Grid: 3 across on row one, 2 across on row two ---- */
+.w-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(10px,1.2vw,16px)}
+
+/* ---- Card ---- */
+.w-card{
+  position:relative;isolation:isolate;cursor:pointer;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#fff,#FBFAFF);
+  border:1px solid #DAD6F5;border-radius:18px;                               /* was 20px */
+  padding:18px;                                                              /* was 22px */
+  transition:transform .35s var(--ease),box-shadow .35s,border-color .3s;
+}
+.w-card.s2{grid-column:span 2}
+.w-card.s3{grid-column:span 3}
+.w-card h3{font-size:17px;font-weight:600;letter-spacing:-.015em;margin-top:12px;line-height:1.25}   /* was 19px / 16px */
+.w-card p{margin-top:4px;color:var(--muted);font-size:14px;line-height:1.45;text-wrap:pretty}         /* was 14.5px / 6px */
+
+/* ---- Small cards (s2): icon beside the title, like the wide cards.
+   .w-head is flattened with display:contents so its children join the card grid.
+   Same markup, but about 40px shorter than the old stacked layout. ---- */
+.w-card.s2{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-rows:auto auto 1fr auto;     /* title, text, chips (takes spare height), footer */
+  column-gap:12px;
+  align-items:start;
+}
+.w-card.s2 .w-head{display:contents}
+.w-card.s2 .w-ic{grid-column:1;grid-row:1 / span 2}
+.w-card.s2 h3{grid-column:2;grid-row:1;margin:0}
+.w-card.s2 .w-n{grid-column:3;grid-row:1}
+.w-card.s2 p{grid-column:2 / -1;grid-row:2;margin-top:4px}
+.w-card.s2 .chips{grid-column:1 / -1;grid-row:3;align-self:end;margin-top:0}
+.w-card.s2 .w-more{grid-column:1 / -1;grid-row:4}
+
+/* chips: pinned to the bottom of the text block so every card in a row lines up,
+   no matter how many lines the description wraps to */
+.w-card .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto;padding-top:12px}                  /* padding was 16px */
+.w-card .chips li{padding:4px 10px;font-size:12px;transition:background .25s,color .25s,border-color .25s,transform .25s var(--ease)}
+.w-card .chips li:hover{background:var(--indigo);color:#fff;border-color:var(--indigo);transform:translateY(-2px)}
+
+/* spotlight that follows the cursor (--mx / --my set from WhatWeDo.jsx) */
+.w-card::before{
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(380px circle at var(--mx,50%) var(--my,0%),rgba(79,70,229,.10),transparent 60%);
+}
+
+/* ---- Wide-card header ---- */
+.w-top{display:flex;align-items:flex-start;gap:12px;position:relative;padding-right:30px}
+.w-top .w-n{position:absolute;right:0;top:2px}
+.w-top h3{margin-top:0}
+
+.w-ic{
+  width:36px;height:36px;border-radius:11px;                                 /* was 42px / 12px */
+  background:var(--tint);color:var(--indigo);display:grid;place-items:center;flex:none;
+  transition:background .3s,color .3s,transform .4s var(--ease);
+}
+.w-ic .ic{width:18px;height:18px}                                            /* was 20px */
+.w-n{font-size:12px;letter-spacing:.08em;color:var(--muted);font-variant-numeric:tabular-nums;transition:color .3s}
+
+/* ---- "See more" footer row (its ::after still makes the whole card clickable) ---- */
+.w-more{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:12px;padding-top:10px;border-top:1px solid #ECEAFA;            /* was 16px / 14px */
+  color:var(--indigo);font-size:13px;font-weight:500;text-decoration:none;
+}
+.w-more::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.w-more .ic{width:14px;height:14px;transition:transform .3s var(--ease)}
+.w-more:focus-visible{outline:none}
+.w-card:has(.w-more:focus-visible){outline:2px solid var(--indigo);outline-offset:3px}
+
+/* selected state */
+.w-card.on{border:1.5px solid var(--indigo);transform:translateY(-4px);box-shadow:0 12px 30px rgba(79,70,229,.1)}
+.w-card.on .w-ic{background:var(--indigo);color:#fff}
+
+/* ---- Hover: lift + gentle tilt (--rx / --ry set from WhatWeDo.jsx) ---- */
+.w-card:hover,
+.w-card:has(:focus-visible){
+  transform:perspective(900px) translateY(-4px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  border-color:var(--indigo);
+  box-shadow:0 16px 36px -10px rgba(79,70,229,.22);
+}
+.w-card:hover{transition:transform .12s ease-out,box-shadow .35s,border-color .3s}
+.w-card:hover::before,
+.w-card:has(:focus-visible)::before{opacity:1}
+.w-card:hover .w-ic,
+.w-card:has(:focus-visible) .w-ic{background:var(--indigo);color:#fff;transform:rotate(-6deg) scale(1.06)}
+.w-card:hover .w-n{color:var(--indigo)}
+.w-card:hover .w-more .ic{transform:translateX(4px)}
+.w-card:active{transform:perspective(900px) translateY(-2px) scale(.99)}
+
+/* ---- Staggered entrance ---- */
+.w-card.w-pre{opacity:0}
+@keyframes w-rise{from{opacity:0;transform:translateY(24px)}}
+.w-card.w-in{animation:w-rise .7s var(--ease) backwards;animation-delay:calc(var(--i,0) * 80ms)}
+
+/* ---- Flow strip ---- */
+.flow{margin-top:clamp(24px,3vw,36px);text-align:center}                     /* was up to 44px */
+.flow small{display:block;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.flow-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px}
+.flow-row .ic{width:14px;height:14px;color:#A6A3C2}
+.f-chip{
+  padding:7px 14px;border:1px solid #D7D4EE;border-radius:999px;background:rgba(255,255,255,.8);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+}
+.f-chip.last{background:linear-gradient(90deg,var(--indigo),#8B5CF6);border-color:transparent;color:#fff}
+
+/* ===== Responsive ===== */
+@media (max-width:980px){
+  .w-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .w-card.s2,.w-card.s3{grid-column:span 1}
+  .w-card:last-child{grid-column:span 2}
+}
+@media (max-width:899px){
+  .what{padding:40px 16px 32px}
+}
+@media (max-width:560px){
+  .w-grid{grid-template-columns:1fr}
+  .w-card.s2,.w-card.s3,.w-card:last-child{grid-column:span 1}
+  .flow{margin-top:28px}
+  .f-chip{padding:6px 11px;font-size:11px}
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion:reduce){
+  .w-card.w-pre{opacity:1}
+  .w-card.w-in{animation:none}
+  .w-card:hover,
+  .w-card:has(:focus-visible){transform:translateY(-3px)}
+  .w-card:hover .w-ic,
+  .w-card:has(:focus-visible) .w-ic{transform:none}
+}

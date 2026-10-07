@@ -1,0 +1,503 @@
+/* ---------- Tokens (override these from your global theme if you have them) ----------
+   Accent falls back through --accent, then --indigo, so this section matches the rest of the site. */
+.ow {
+  --ow-accent: var(--accent, var(--indigo, #4f46e5));
+  --ow-accent-deep: #3730a3;
+  --ow-accent-soft: #eef0ff;
+  --ow-ink: var(--ink, #14142b);
+  --ow-muted: #5f6280;
+  --ow-bg: var(--bg, #f6f5f2);
+  --ow-card: #ffffff;
+  --ow-line: #e3e2ee;
+  --ow-ease: var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+  --ow-gap: clamp(12px, 1.4vw, 18px);
+  --ow-radius: 18px;
+
+  background: var(--ow-bg);
+  color: var(--ow-ink);
+  font-family: inherit;
+  padding: clamp(36px, 5vw, 64px) 0 clamp(40px, 5vw, 64px); /* was 72px 0 64px */
+}
+
+.ow *,
+.ow *::before,
+.ow *::after {
+  box-sizing: border-box;
+}
+
+.ow__inner {
+ 
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 32px);
+}
+
+/* ---------- Header: centred and compact; arrows sit bottom-right ---------- */
+.ow__head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: clamp(18px, 2.5vw, 26px); /* was 28px */
+}
+
+.ow__titleWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ow__pill {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--ow-accent) 28%, white);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ow-accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ow__title {
+  margin: 12px 0 0;
+  font-size: clamp(28px, 3.6vw, 40px); /* was up to 46px on two forced lines */
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+/* The <br/> in the markup forced two lines; hide it so the title sits on one line
+   when there is room (it still wraps, balanced, on narrow screens). */
+.ow__title br {
+  display: none;
+}
+
+.ow__accent {
+  display: inline-block; /* wraps as one unit: "Into Reality." */
+  margin-left: 0.25em;
+  background: linear-gradient(90deg, var(--ow-accent), #8b5cf6 60%, #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ow__sub {
+  margin: 10px 0 0;
+  max-width: 46ch;
+  color: var(--ow-muted);
+  font-size: clamp(14.5px, 1.1vw, 16.5px);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+/* ---------- Arrows ---------- */
+.ow__arrows {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.ow__arrow {
+  width: 40px; /* was 46px */
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ow-line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ow-ink);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s, transform 0.25s var(--ow-ease);
+}
+
+.ow__arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ow__arrow:hover:not(:disabled) {
+  background: var(--ow-accent);
+  border-color: var(--ow-accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.ow__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---------- Filters: one row, centred when it fits, scrollable when it doesn't ---------- */
+.ow__filters {
+  display: flex;
+  justify-content: safe center; /* centred, but never clips the first chip when it overflows */
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 2px 10px;
+  margin-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.ow__filters::-webkit-scrollbar {
+  display: none;
+}
+
+.ow__chip {
+  flex-shrink: 0;
+  padding: 7px 14px; /* was 9px 16px */
+  border: 1px solid var(--ow-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ow-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.25s var(--ow-ease);
+}
+
+.ow__chip:hover {
+  border-color: var(--ow-accent);
+  color: var(--ow-accent);
+  transform: translateY(-1px);
+}
+
+.ow__chip.is-active {
+  background: var(--ow-accent);
+  border-color: var(--ow-accent);
+  color: #fff;
+  transform: none;
+}
+
+/* ---------- Track ----------
+   Vertical padding gives the hover lift and shadow room (overflow-x:auto also clips on y);
+   the negative margins cancel it out so the layout doesn't grow. */
+.ow__track {
+  display: flex;
+  gap: var(--ow-gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 2px;
+  padding: 10px 2px 24px;
+  margin: -6px 0 -12px;
+  scrollbar-width: none;
+  animation: ow-swap 0.35s ease both; /* plays only when the filter changes (track remounts) */
+}
+
+.ow__track::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes ow-swap {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Card ---------- */
+.ow-card {
+  /* about 3 cards plus a clear peek of the 4th, so it reads as scrollable */
+  flex: 0 0 calc((100% - 3 * var(--ow-gap)) / 3.4);
+  scroll-snap-align: start;
+  background: var(--ow-card);
+  border: 1px solid var(--ow-line);
+  border-radius: var(--ow-radius); /* was 20px */
+  overflow: hidden;
+  transition: transform 0.35s var(--ow-ease), border-color 0.25s, box-shadow 0.35s;
+}
+
+.ow-card:hover,
+.ow-card:focus-within {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--ow-accent) 45%, white);
+  box-shadow: 0 16px 36px -12px color-mix(in srgb, var(--ow-accent) 28%, transparent);
+}
+
+.ow-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.ow-card__link:focus-visible {
+  outline: 3px solid var(--ow-accent);
+  outline-offset: -3px;
+  border-radius: var(--ow-radius);
+}
+
+.ow-card__media {
+  position: relative;
+  aspect-ratio: 16 / 10; /* was 4 / 3: about 25% shorter */
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ow-accent), #7c7ff0);
+}
+
+.ow-card--t1 .ow-card__media { background: linear-gradient(135deg, var(--ow-accent), #8b8cf4); }
+.ow-card--t2 .ow-card__media { background: linear-gradient(135deg, #1e1b4b, #4338ca); }
+.ow-card--t3 .ow-card__media { background: linear-gradient(135deg, #6366f1, #a9acf8); }
+.ow-card--t4 .ow-card__media { background: linear-gradient(135deg, #312e81, #5b54e8); }
+
+/* soft shapes on the placeholder cover */
+.ow-card__media::before,
+.ow-card__media::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+  transition: transform 0.6s var(--ow-ease);
+}
+
+.ow-card__media::before {
+  width: 70%;
+  aspect-ratio: 1;
+  top: -30%;
+  left: -12%;
+}
+
+.ow-card__media::after {
+  width: 52%;
+  aspect-ratio: 1;
+  right: -14%;
+  bottom: -26%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ow-card:hover .ow-card__media::before {
+  transform: translate(6%, 6%) scale(1.06);
+}
+
+.ow-card:hover .ow-card__media::after {
+  transform: translate(-6%, -6%) scale(1.1);
+}
+
+.ow-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  transition: transform 0.6s var(--ow-ease);
+}
+
+.ow-card:hover .ow-card__media img {
+  transform: scale(1.05);
+}
+
+.ow-card__tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--ow-accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ow-card__go {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  width: 34px; /* was 38px */
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ow-accent);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.25s, transform 0.3s var(--ow-ease);
+}
+
+.ow-card__go svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ow-card:hover .ow-card__go,
+.ow-card__link:focus-visible .ow-card__go {
+  opacity: 1;
+  transform: none;
+}
+
+.ow-card__body {
+  padding: 14px 16px 16px; /* was 16px 18px 18px */
+}
+
+.ow-card__title {
+  margin: 0;
+  font-size: 16px; /* was 17px */
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.ow-card__summary {
+  margin: 3px 0 0;
+  color: var(--ow-muted);
+  font-size: 14px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* ---------- Footer ---------- */
+.ow__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 10px; /* the track's bottom padding supplies the rest */
+}
+
+.ow__progress {
+  flex: 1;
+  max-width: 320px;
+  height: 3px;
+  border-radius: 3px;
+  background: #dcdbec;
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+
+.ow__progress.is-hidden {
+  opacity: 0;
+}
+
+.ow__progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--ow-accent), #8b5cf6);
+  border-radius: 3px;
+  transform-origin: left;
+  transition: transform 0.2s ease-out;
+}
+
+.ow__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  padding: 11px 22px; /* was 13px 22px */
+  border-radius: 999px;
+  background: var(--ow-accent);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--ow-accent) 80%, black);
+  transition: background 0.2s, transform 0.25s var(--ow-ease), box-shadow 0.25s;
+}
+
+.ow__cta:hover {
+  background: var(--ow-accent-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -12px color-mix(in srgb, var(--ow-accent) 80%, black);
+}
+
+.ow__cta svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s;
+}
+
+.ow__cta:hover svg {
+  transform: translateX(3px);
+}
+
+.ow__cta:focus-visible,
+.ow__chip:focus-visible,
+.ow__arrow:focus-visible,
+.ow__track:focus-visible {
+  outline: 3px solid var(--ow-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Touch: no hover, so keep the card arrow visible ---------- */
+@media (hover: none) {
+  .ow-card__go {
+    opacity: 1;
+    transform: none;
+  }
+  .ow-card:hover {
+    transform: none;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1280px) {
+  /* chips may overflow here, so fade the right edge as a scroll hint */
+  .ow__filters {
+    -webkit-mask-image: linear-gradient(to right, #000 92%, transparent);
+    mask-image: linear-gradient(to right, #000 92%, transparent);
+  }
+}
+
+@media (max-width: 1024px) {
+  .ow-card {
+    flex-basis: calc((100% - 2 * var(--ow-gap)) / 2.4);
+  }
+}
+
+@media (max-width: 768px) {
+  .ow__arrows {
+    display: none; /* swipe on touch devices; also stops the arrows crowding the title */
+  }
+}
+
+@media (max-width: 640px) {
+  .ow-card {
+    flex-basis: 78%;
+  }
+  .ow__foot {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 16px;
+  }
+  .ow__progress {
+    max-width: none;
+  }
+  .ow__cta {
+    justify-content: center;
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ow__track {
+    animation: none;
+  }
+  .ow *,
+  .ow *::before,
+  .ow *::after {
+    transition: none !important;
+  }
+  .ow-card:hover,
+  .ow-card:focus-within,
+  .ow__cta:hover,
+  .ow__arrow:hover:not(:disabled),
+  .ow__chip:hover {
+    transform: none;
+  }
+}

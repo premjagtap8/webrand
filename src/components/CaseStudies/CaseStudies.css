@@ -1,0 +1,450 @@
+/* ===== Case Studies (section.cs#case-studies) =====
+   Compact version: one row of 4 to 5 small cards (about 250 x 250px each).
+   Matches CaseStudies.jsx. All classes are prefixed "cs" so they can't clash with
+   the old ".cs-*" rules in Home.css (delete those once this is in). Uses the
+   app's global tokens (--accent, --indigo, --ink, --bg, --ease) with fallbacks,
+   and --page-gutter for side spacing. No max-width cap on the section. */
+
+.cs {
+  --cs-accent: var(--accent, var(--indigo, #4f46e5));
+  --cs-accent-deep: #3730a3;
+  --cs-ink: var(--ink, #14142b);
+  --cs-muted: #5f6280;
+  --cs-bg: var(--bg, #f6f5f2);
+  --cs-line: #e3e2ee;
+  --cs-ease: var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+  --cs-gutter: var(--page-gutter, clamp(16px, 3vw, 32px));
+  --cs-gap: 16px;
+  --cs-card-w: 250px; /* minimum card width: cards grow to fill the row but never shrink below this */
+  --cs-radius: 20px;
+
+  background: var(--cs-bg);
+  color: var(--cs-ink);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; /* same stack as What We Do / Our Services; move to body when you can */
+  padding-block: clamp(32px, 4.5vw, 56px);
+  scroll-margin-top: 80px; /* #case-studies anchor clears the sticky navbar */
+}
+
+.cs *,
+.cs *::before,
+.cs *::after {
+  box-sizing: border-box;
+}
+
+.cs__inner {
+  padding-inline: var(--cs-gutter);
+}
+
+/* ---------- Header: centred and compact ---------- */
+.cs__head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-block-end: clamp(16px, 2.2vw, 24px);
+}
+
+.cs__pill {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--cs-accent) 28%, white);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cs-accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cs__title {
+  margin: 12px 0 0;
+  font-size: clamp(28px, 3.6vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.cs__accent {
+  display: inline-block; /* wraps as one unit */
+  background: linear-gradient(90deg, var(--cs-accent), #8b5cf6 60%, #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cs__sub {
+  margin: 10px 0 0;
+  max-width: 52ch;
+  color: var(--cs-muted);
+  font-size: clamp(14.5px, 1.1vw, 16.5px);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+/* "Explore" sits in the header's bottom-right corner on desktop, so it adds no height */
+.cs__all {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border: 1px solid var(--cs-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cs-ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.25s var(--cs-ease);
+}
+
+.cs__all svg {
+  inline-size: 16px;
+  block-size: 16px;
+  transition: transform 0.2s;
+}
+
+.cs__all:focus-visible {
+  outline: 3px solid var(--cs-accent);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs__all:hover {
+    background: var(--cs-accent);
+    border-color: var(--cs-accent);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  .cs__all:hover svg {
+    transform: translate(2px, -2px);
+  }
+}
+
+/* "Explore" drops under the subtitle once the header gets tight */
+@media (max-width: 1100px) {
+  .cs__all {
+    position: static;
+    margin-block-start: 14px;
+  }
+}
+
+/* ---------- Row: fills the full width like the other sections, swipeable when it can't fit ---------- */
+.cs__grid {
+  display: flex;
+  gap: var(--cs-gap);
+  margin: -12px calc(-1 * var(--cs-gutter)) -8px; /* bleed to the screen edge; first card still lines up with the gutter */
+  padding: 12px var(--cs-gutter) 20px;           /* room for the hover lift and shadow */
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--cs-gutter);
+  scrollbar-width: none;
+}
+
+.cs__grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* cards share the full row equally, but never get narrower than --cs-card-w
+   (below that the row scrolls sideways instead) */
+.cs__item {
+  flex: 1 0 var(--cs-card-w);
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* ---------- Card: about 250 x 250px ---------- */
+.cs-card {
+  position: relative; /* the title link stretches over the whole card */
+  isolation: isolate;
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid var(--cs-line);
+  border-radius: var(--cs-radius);
+  background: #fff;
+  transition: transform 0.35s var(--cs-ease), box-shadow 0.35s var(--cs-ease), border-color 0.25s;
+}
+
+/* cover: short, with the headline result on it */
+.cs-card__cover {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-block-size: 84px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--cs-accent), #8b8cf4);
+}
+
+.cs-card--t1 .cs-card__cover { background-image: linear-gradient(145deg, var(--cs-accent), #8b8cf4); }
+.cs-card--t2 .cs-card__cover { background-image: linear-gradient(145deg, #1e1b4b, #4338ca); }
+.cs-card--t3 .cs-card__cover { background-image: linear-gradient(145deg, #6366f1, #a9acf8); }
+.cs-card--t4 .cs-card__cover { background-image: linear-gradient(145deg, #312e81, #5b54e8); }
+.cs-card--t5 .cs-card__cover { background-image: linear-gradient(145deg, #26224d, #6d65ee); }
+
+/* soft dot texture and a soft circle, same cover language as Our Work and Insights */
+.cs-card__cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1.4px);
+  background-size: 16px 16px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 80%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 80%);
+}
+
+.cs-card__cover::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inline-size: 60%;
+  aspect-ratio: 1;
+  inset-inline-end: -16%;
+  inset-block-start: -50%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  transition: transform 0.7s var(--cs-ease);
+}
+
+.cs-card__tag {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  max-inline-size: calc(100% - 76px);
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--cs-accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cs-card__sample {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
+  padding: 1px 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* number and label share one line to keep the cover short */
+.cs-card__metric {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-inline-end: 34px; /* keeps clear of the arrow badge */
+  min-width: 0;
+}
+
+.cs-card__metric b {
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.cs-card__metric small {
+  min-width: 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.82);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* arrow badge, bottom-right of the cover */
+.cs-card__go {
+  position: absolute;
+  inset-block-end: 8px;
+  inset-inline-end: 8px;
+  display: grid;
+  place-items: center;
+  inline-size: 26px;
+  block-size: 26px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--cs-accent);
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition: opacity 0.25s, transform 0.35s var(--cs-ease);
+}
+
+.cs-card__go svg {
+  inline-size: 13px;
+  block-size: 13px;
+}
+
+/* ---------- Body ---------- */
+.cs-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 4px 2px;
+}
+
+.cs-card__title {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* one line keeps every card the same height; full title shows on hover */
+}
+
+/* the whole card is the click target */
+.cs-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cs-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+.cs-card__link:focus-visible {
+  outline: none;
+}
+
+.cs-card:has(.cs-card__link:focus-visible) {
+  outline: 3px solid var(--cs-accent);
+  outline-offset: 3px;
+}
+
+.cs-card__facts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.cs-card__facts dt {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--cs-accent);
+}
+
+.cs-card__facts dd {
+  margin: 1px 0 0;
+  color: var(--cs-muted);
+  font-size: 12.5px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* never grows past two lines */
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ---------- Interactions (only where hover really exists) ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .cs-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--cs-accent) 45%, white);
+    box-shadow: 0 16px 32px -18px color-mix(in srgb, var(--cs-accent) 55%, transparent);
+  }
+  .cs-card:hover .cs-card__cover::after {
+    transform: translate(-8%, 8%) scale(1.1);
+  }
+  .cs-card:hover .cs-card__go {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* keyboard parity */
+.cs-card:has(.cs-card__link:focus-visible) .cs-card__go {
+  opacity: 1;
+  transform: none;
+}
+
+/* touch: no hover, so keep the arrow visible */
+@media (hover: none) {
+  .cs-card__go {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Scroll-in reveal (progressive enhancement) ----------
+   One quiet rise for the header and the row. It runs on those two blocks, not on
+   the cards, because the cards sit inside a horizontal scroller and a view()
+   timeline would bind to that scroller instead of the page. */
+@keyframes cs-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cs__head,
+    .cs__grid {
+      animation: cs-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+/* ---------- Accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .cs *,
+  .cs *::before,
+  .cs *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  .cs-card:hover,
+  .cs__all:hover {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .cs-card,
+  .cs__all {
+    border: 1px solid CanvasText;
+  }
+  .cs__accent {
+    -webkit-text-fill-color: CanvasText;
+    background: none;
+  }
+}

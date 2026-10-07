@@ -1,0 +1,508 @@
+/* ---------- Registered property ----------
+   Lets the hover ring's angle animate. Browsers without @property simply
+   show a static ring instead. */
+@property --ins-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ---------- Tokens ----------
+   Accent falls back through --accent, then --indigo, so this section picks up
+   the same brand colour as Our Services, How We Work and Our Work. */
+.ins {
+  --ins-accent: var(--accent, var(--indigo, #4f46e5));
+  --ins-accent-deep: #3730a3;
+  --ins-ink: var(--ink, #14142b);
+  --ins-muted: #5f6280;
+  --ins-bg: var(--bg, #f6f5f2);
+  --ins-line: #e3e2ee;
+  --ins-ease: var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+  --ins-gutter: clamp(16px, 3vw, 32px);
+  --ins-gap: clamp(12px, 1.4vw, 18px);
+  --ins-radius: 18px;
+
+  background: var(--ins-bg);
+  color: var(--ins-ink);
+  font-family: inherit;
+  padding-block: clamp(32px, 4.5vw, 56px) clamp(36px, 4.5vw, 56px);
+  scroll-margin-top: 80px; /* #insights anchor clears a sticky header */
+}
+
+.ins *,
+.ins *::before,
+.ins *::after {
+  box-sizing: border-box;
+}
+
+.ins__inner {
+  
+  margin-inline: auto;
+  padding-inline: var(--ins-gutter);
+}
+
+/* ---------- Header: centred and compact; "View all" sits bottom-right ---------- */
+.ins__head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-block-end: clamp(18px, 2.5vw, 26px);
+}
+
+.ins__pill {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--ins-accent) 28%, white);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ins-accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ins__title {
+  margin: 12px 0 0;
+  font-size: clamp(28px, 3.6vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+/* one line when there is room, balanced wrap on narrow screens */
+.ins__title br {
+  display: none;
+}
+
+.ins__accent {
+  display: inline-block; /* wraps as one unit */
+  margin-inline-start: 0.25em;
+  background: linear-gradient(90deg, var(--ins-accent), #8b5cf6 60%, #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ins__sub {
+  margin: 10px 0 0;
+  max-width: 52ch;
+  color: var(--ins-muted);
+  font-size: clamp(14.5px, 1.1vw, 16.5px);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.ins__all {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-end: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border: 1px solid var(--ins-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ins-ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.25s var(--ins-ease);
+}
+
+.ins__all:hover {
+  background: var(--ins-accent);
+  border-color: var(--ins-accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.ins__all svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s;
+}
+
+.ins__all:hover svg {
+  transform: translateX(3px);
+}
+
+.ins__all:focus-visible {
+  outline: 3px solid var(--ins-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Grid: one row, exactly four compact cards ---------- */
+.ins__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ins-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ins__item {
+  min-width: 0;
+}
+
+/* ---------- Card: cover image with the text sitting on it ---------- */
+.ins-card {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 3 / 2; /* short, landscape card */
+  border-radius: var(--ins-radius);
+  overflow: hidden;
+  isolation: isolate;
+  background-color: #4f46e5; /* solid fallback so the card is never blank */
+  background-image: linear-gradient(145deg, var(--ins-accent), #8b8cf4);
+  box-shadow: 0 1px 2px rgba(20, 20, 43, 0.06);
+  transition:
+    transform 0.4s var(--ins-ease),
+    box-shadow 0.4s var(--ins-ease),
+    opacity 0.3s;
+}
+
+/* same cover tones as the Our Work cards */
+.ins-card--t1 { background-image: linear-gradient(145deg, var(--ins-accent), #8b8cf4); }
+.ins-card--t2 { background-image: linear-gradient(145deg, #1e1b4b, #4338ca); }
+.ins-card--t3 { background-image: linear-gradient(145deg, #6366f1, #a9acf8); }
+.ins-card--t4 { background-image: linear-gradient(145deg, #312e81, #5b54e8); }
+
+/* placeholder texture (only when there is no cover image, so it never paints over a photo) */
+.ins-card--ph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1.4px);
+  background-size: 20px 20px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+
+.ins-card--ph::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inline-size: 70%;
+  aspect-ratio: 1;
+  inset-inline-end: -22%;
+  inset-block-start: -18%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  transition: transform 0.7s var(--ins-ease);
+}
+
+.ins-card__link {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: inherit;
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+}
+
+.ins-card__link:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -5px;
+}
+
+/* keeps text readable on any cover image */
+.ins-card__link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(15, 12, 50, 0.9) 0%,
+    rgba(15, 12, 50, 0.52) 42%,
+    rgba(15, 12, 50, 0) 76%
+  );
+}
+
+/* hairline ring that draws around the card on hover / focus */
+.ins-card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--ins-angle),
+    rgba(255, 255, 255, 0) 0 55%,
+    rgba(255, 255, 255, 0.95) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  /* punch out the middle so only the 1.5px edge shows */
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+
+.ins-card__img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ins-ease);
+}
+
+.ins-card__tag {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-start: 12px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  backdrop-filter: blur(10px) saturate(1.4);
+  color: var(--ins-accent);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.ins-card__go {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
+  inline-size: 32px;
+  block-size: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ins-accent);
+  opacity: 0;
+  transform: translate(-4px, 4px) rotate(-45deg);
+  transition: opacity 0.25s, transform 0.35s var(--ins-ease);
+}
+
+.ins-card__go svg {
+  inline-size: 15px;
+  block-size: 15px;
+}
+
+.ins-card__body {
+  padding: 14px 16px 16px;
+}
+
+.ins-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 5px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ins-card__dot {
+  inline-size: 3px;
+  block-size: 3px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ins-card__title {
+  margin: 0;
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.28;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* never grows past three lines */
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* "Read article" slides in under the title on hover (mouse only, so touch stays clean) */
+.ins-card__body::after {
+  content: "Read article \2192";
+  display: block;
+  block-size: 0;
+  margin-block-start: 0;
+  overflow: hidden;
+  opacity: 0;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition:
+    block-size 0.4s var(--ins-ease),
+    margin-block-start 0.4s var(--ins-ease),
+    opacity 0.3s;
+}
+
+/* ---------- Interactions (only where hover really exists) ---------- */
+@keyframes ins-spin {
+  to {
+    --ins-angle: 360deg;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ins-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 2px rgba(20, 20, 43, 0.06),
+      0 22px 40px -20px color-mix(in srgb, var(--ins-accent) 75%, black);
+  }
+  .ins-card:hover .ins-card__img {
+    transform: scale(1.06);
+  }
+  .ins-card--ph:hover::after {
+    transform: translate(-6%, 6%) scale(1.08);
+  }
+  .ins-card:hover .ins-card__go {
+    opacity: 1;
+    transform: rotate(-45deg);
+  }
+  .ins-card:hover .ins-card__link::after {
+    opacity: 1;
+    animation: ins-spin 3.2s linear infinite;
+  }
+  .ins-card:hover .ins-card__body::after {
+    block-size: 18px;
+    margin-block-start: 8px;
+    opacity: 1;
+  }
+  /* the hovered card leads; its siblings step back */
+  .ins__grid:has(.ins-card:hover) .ins-card:not(:hover) {
+    opacity: 0.7;
+  }
+}
+
+/* keyboard parity (focus-visible, so a mouse click doesn't leave a card lifted) */
+.ins-card:has(:focus-visible) {
+  transform: translateY(-4px);
+  box-shadow:
+    0 1px 2px rgba(20, 20, 43, 0.06),
+    0 22px 40px -20px color-mix(in srgb, var(--ins-accent) 75%, black);
+}
+
+.ins-card__link:focus-visible .ins-card__go {
+  opacity: 1;
+  transform: rotate(-45deg);
+}
+
+.ins-card__link:focus-visible::after {
+  opacity: 1;
+}
+
+/* touch: no hover, so keep the arrow visible */
+@media (hover: none) {
+  .ins-card__go {
+    opacity: 1;
+    transform: rotate(-45deg);
+  }
+}
+
+/* ---------- Scroll-in reveal (progressive enhancement) ----------
+   Driven by scroll position, with a small stagger across the row. Runs on the
+   <li>, not the card, so its fill-mode can never override the card's hover
+   transform. Desktop only, where the row is a plain grid. */
+@keyframes ins-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (min-width: 1001px) and (prefers-reduced-motion: no-preference) {
+    .ins__item {
+      animation: ins-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 50%;
+    }
+    .ins__item:nth-child(2) { animation-range: entry 6% entry 56%; }
+    .ins__item:nth-child(3) { animation-range: entry 12% entry 62%; }
+    .ins__item:nth-child(4) { animation-range: entry 18% entry 68%; }
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+/* "View all" drops under the subtitle once the header gets tight */
+@media (max-width: 1024px) {
+  .ins__all {
+    position: static;
+    margin-block-start: 14px;
+  }
+}
+
+/* Tablet and phones: same compact row, swipeable, bleeding to the screen edge */
+@media (max-width: 1000px) {
+  .ins__grid {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--ins-gutter);
+    scrollbar-width: none;
+
+    /* bleed past the container gutter; first card still lines up with it */
+    margin: -12px calc(-1 * var(--ins-gutter)) -24px;
+    /* vertical padding gives the lift and shadow room (overflow-x also clips y) */
+    padding: 12px var(--ins-gutter) 32px;
+  }
+
+  .ins__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ins__item {
+    flex: 0 0 min(44%, 340px);
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .ins__item {
+    flex-basis: min(76%, 300px);
+  }
+}
+
+/* ---------- Accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ins *,
+  .ins *::before,
+  .ins *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+  .ins-card:hover,
+  .ins-card:has(:focus-visible),
+  .ins__all:hover {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ins-card {
+    border: 1px solid CanvasText;
+  }
+}

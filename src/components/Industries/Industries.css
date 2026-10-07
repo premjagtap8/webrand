@@ -1,0 +1,253 @@
+/* ===== Industries (section.ind#industries) =====
+   Uses the app's global tokens (--navy, --indigo, --ink, --ease) and derives
+   the card shades from them in one place, so the section stays on-theme. */
+
+.ind{
+  /* local tokens: tweak card density / shades here */
+  --ind-card:#211F3F;
+  --ind-card-hover:#27244D;
+  --ind-line:#37345F;
+  --ind-accent:#8B7CF6;
+  --ind-accent-soft:#A99EFF;
+  --ind-chip:#312E5E;
+  --ind-chip-hover:#3B3772;
+  --ind-chip-text:#DAD6FF;
+  --ind-muted:#A8A6C4;
+  --ind-pad:16px;
+  --ind-radius:18px;
+
+  background:var(--navy);
+  border-radius:30px;
+  padding:clamp(40px,6vw,64px) clamp(16px,4vw,40px);
+  margin: 0 var(--page-gutter) 8px
+}
+
+/* ---- Section head ---- */
+.ind .pill{background:#26224D;border-color:#3A3573;color:var(--ind-accent-soft)}
+.ind .sec-head{max-width:none}
+.ind .sec-head h2{
+  color:#fff;
+  font-size:clamp(26px,3.4vw,38px);   /* fluid; replaces the 899px override */
+  letter-spacing:-.02em;
+  text-wrap:balance;
+}
+.ind .sec-head h2 .nw{white-space:normal}
+.ind .sec-head h2 em{color:#9B8CFF;display:block}
+.ind .sec-head p{color:var(--ind-muted)}
+
+/* ---- Grid: 4 x 2, fills the section width (cap only for ultra-wide screens) ---- */
+.i-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  width:100%;
+  
+  margin-inline:auto;
+}
+
+/* ---- Card ---- */
+.i-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding:var(--ind-pad);
+  min-height:0;                        /* no forced height: content decides */
+  background:var(--ind-card);
+  border:1px solid var(--ind-line);
+  border-radius:var(--ind-radius);
+  cursor:pointer;
+  transition:
+    transform .3s var(--ease),
+    background .3s,
+    border-color .3s,
+    box-shadow .3s var(--ease);
+}
+.i-card:hover,
+.i-card:focus-within{
+  background:var(--ind-card-hover);
+  border-color:var(--ind-accent);
+  transform:translateY(-3px);          /* lift only: no scale, so text stays crisp */
+  box-shadow:
+    0 16px 32px -16px rgba(0,0,0,.6),
+    0 0 0 1px rgba(139,124,246,.28);
+}
+.i-card:has(a:focus-visible){
+  outline:2px solid var(--ind-accent-soft);
+  outline-offset:2px;
+}
+
+.i-card h3{
+  margin:0;
+  font-size:16px;
+  font-weight:600;
+  line-height:1.25;
+  letter-spacing:-.01em;
+  color:#fff;
+  text-wrap:balance;
+}
+
+/* If you wrap the title in a link, this makes the whole card clickable */
+.i-card h3 a{color:inherit;text-decoration:none}
+.i-card h3 a::after{content:"";position:absolute;inset:0;border-radius:inherit}
+
+/* ---- Icon tile ---- */
+.i-ic{
+  width:38px;
+  height:38px;
+  border-radius:11px;
+  background:var(--indigo);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  transition:background .3s,transform .35s var(--ease);
+}
+.i-ic .ic{width:18px;height:18px}
+.i-card:hover .i-ic,
+.i-card:focus-within .i-ic{background:#6B5CF6;transform:rotate(-6deg)}
+
+/* ---- Arrow badge (revealed on hover / focus) ---- */
+.i-go{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:#fff;
+  color:var(--indigo);
+  display:grid;
+  place-items:center;
+  opacity:0;
+  transform:translate(-4px,4px) scale(.85);
+  transition:opacity .25s,transform .35s var(--ease);
+}
+.i-go .ic{width:12px;height:12px}
+.i-card:hover .i-go,
+.i-card:focus-within .i-go{opacity:1;transform:none}
+
+/* ---- Chips ---- */
+.i-card .chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin:auto 0 0;                     /* pins chips to the bottom so rows align even if a title wraps */
+  padding:0;
+  list-style:none;
+}
+.i-card .chips li{
+  background:var(--ind-chip);
+  color:var(--ind-chip-text);
+  border:1px solid transparent;
+  border-radius:999px;
+  font-size:12px;
+  line-height:1;
+  padding:5px 9px;
+  transition:background .25s,color .25s;
+}
+.i-card .chips li.more{
+  background:transparent;
+  border-color:#4A4680;
+  color:var(--ind-muted);
+}
+.i-card:hover .chips li:not(.more),
+.i-card:focus-within .chips li:not(.more){
+  background:var(--ind-chip-hover);
+  color:#fff;
+}
+
+/* ---- CTA ---- */
+.i-cta{margin-top:32px;text-align:center}
+.i-cta a{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:#fff;
+  color:var(--ink);
+  padding:14px 26px;
+  border-radius:999px;
+  font-weight:500;
+  font-size:15px;
+  text-decoration:none;
+  transition:transform .25s var(--ease),box-shadow .25s;
+}
+.i-cta a:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px -10px rgba(255,255,255,.35);
+}
+.i-cta a:focus-visible{outline:2px solid var(--ind-accent-soft);outline-offset:3px}
+.i-cta .ic{width:16px;height:16px;transition:transform .25s var(--ease)}
+.i-cta a:hover .ic{transform:translateX(3px)}
+
+/* ---- Touch devices: no hover, so keep the arrow visible ---- */
+@media (hover:none){
+  .i-go{opacity:1;transform:none}
+  .i-card:hover{transform:none}
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion:reduce){
+  .i-card,
+  .i-card *,
+  .i-cta a,
+  .i-cta .ic{transition:none!important}
+  .i-card:hover,
+  .i-card:focus-within,
+  .i-card:hover .i-ic,
+  .i-cta a:hover{transform:none}
+}
+
+/* ---- Wide screens: horizontal card (icon left, text right) ----
+   Wide cards would otherwise be mostly empty on the right. This keeps them
+   short and uses the width. Markup is unchanged (grid on the card itself). */
+@media (min-width:1440px){
+  .ind{--ind-pad:20px}
+  .i-grid{gap:18px}
+  .i-card{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    column-gap:18px;
+    row-gap:12px;
+    align-items:center;
+  }
+  .i-ic{
+    grid-row:1 / span 2;
+    align-self:start;
+    width:52px;
+    height:52px;
+    border-radius:15px;
+  }
+  .i-ic .ic{width:24px;height:24px}
+  .i-card h3{
+    grid-column:2;
+    align-self:end;
+    padding-right:32px;               /* keeps the title clear of the arrow badge */
+    font-size:18px;
+  }
+  .i-card .chips{
+    grid-column:2;
+    align-self:start;
+    margin:0;
+  }
+  .i-card .chips li{font-size:12.5px;padding:6px 10px}
+  .i-go{top:18px;right:18px}
+}
+
+/* ---- Tablet: 2 x 4 ---- */
+@media (max-width:860px){
+  .i-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ---- Phones: keep two compact columns instead of one tall stack ---- */
+@media (max-width:560px){
+  .ind{--ind-pad:14px;border-radius:24px}
+  .i-grid{gap:10px}
+  .i-card h3{font-size:15px}
+  .i-go{display:none}                  /* too small to be useful on compact cards */
+  .i-cta a{padding:13px 22px;font-size:15px}
+}
+
+/* ---- Very small phones ---- */
+@media (max-width:360px){
+  .i-grid{grid-template-columns:1fr}
+}
