@@ -82,12 +82,13 @@ export default function Hero() {
               <line x1="0" y1="0" x2="68" y2="163" />
             </g>
           </svg>
+          {/* desktop rays: these end points match the node positions in Hero.css (left / top of .o-node:nth-of-type) */}
           <svg className="o-rays" aria-hidden="true">
-            <line x1="50%" y1="50%" x2="22%" y2="10%" />
-            <line x1="50%" y1="50%" x2="80%" y2="20%" />
-            <line x1="50%" y1="50%" x2="85%" y2="52%" />
-            <line x1="50%" y1="50%" x2="14%" y2="68%" />
-            <line x1="50%" y1="50%" x2="66%" y2="90%" />
+            <line x1="50%" y1="50%" x2="20%" y2="8%" />
+            <line x1="50%" y1="50%" x2="82%" y2="20%" />
+            <line x1="50%" y1="50%" x2="88%" y2="54%" />
+            <line x1="50%" y1="50%" x2="6%" y2="66%" />
+            <line x1="50%" y1="50%" x2="62%" y2="90%" />
           </svg>
           <div className="o-core">W</div>
           {NODES.map((n) => (

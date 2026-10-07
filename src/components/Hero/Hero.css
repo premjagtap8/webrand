@@ -4,16 +4,17 @@
 .hero,
 .hero .btn{font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 
+/* v2: full width. The 1320px cap is gone, and the side padding now matches the navbar
+   and the other sections (--page-gutter), so everything lines up on the same edges. */
 .hero{
   position:relative;
   isolation:isolate;                                   /* contains the z-index:-1 glow layers */
-  max-width:1320px;
-  margin-inline:auto;                                  /* cap + center: no more edge-to-edge stretch */
+  overflow-x:clip;                                     /* the decorative glow can never cause a sideways scrollbar */
   display:grid;
-  grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); /* text gets the bigger track; minmax(0) prevents nowrap overflow */
-  gap:clamp(24px,3vw,56px);
+  grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); /* minmax(0) prevents nowrap overflow */
+  gap:clamp(24px,4vw,80px);
   align-items:center;
-  padding:clamp(24px,4vw,56px) clamp(16px,3vw,32px) 56px;
+  padding:clamp(24px,4vw,56px) var(--page-gutter,32px) 56px;
 }
 .h-tag{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid #D7D4EE;border-radius:999px;background:#fff;color:var(--indigo);font-size:13px;font-weight:500}
 .h-tag .ic{width:15px;height:15px}
@@ -45,7 +46,7 @@
 
 /* Background: aurora glow + faint dot grid (purely decorative, no layout impact) */
 .hero::before{
-  content:"";position:absolute;inset:-10% -5% -10% 40%;z-index:-1;pointer-events:none;
+  content:"";position:absolute;inset:-10% 0 -10% 40%;z-index:-1;pointer-events:none;   /* right was -5%: overflowed the page at full width */
   background:
     radial-gradient(40% 45% at 60% 45%,rgba(124,116,240,.28),transparent 70%),
     radial-gradient(30% 30% at 85% 15%,rgba(79,70,229,.14),transparent 70%);
@@ -106,16 +107,36 @@
 @keyframes o-spin{to{rotate:360deg}}
 @keyframes o-pulse{0%,100%{box-shadow:0 0 0 10px rgba(79,70,229,.10)}50%{box-shadow:0 0 0 20px rgba(79,70,229,.04)}}
 
-/* ===== Desktop: fluid orbit that scales with its column ===== */
+/* ===== Desktop: everything scales with the screen so the hero fills the width ===== */
 @media (min-width:900px){
-  .orbit{container-type:inline-size;height:auto;aspect-ratio:1/1;max-height:560px;width:100%}   /* was 6/5 + 620px */
-  .o-origin{left:0;top:0;width:100%;height:100%;transform:none}
+  /* headline and intro grow with the viewport, so the text column stays full
+     and there is no empty hole between it and the orbit */
+  .hero h1{font-size:clamp(34px,4.4vw,88px)}
+  .hero p{font-size:clamp(16px,1.3vw,24px);max-width:36em}
+  .hero .btn{font-size:clamp(15px,1.05vw,18px)}
+  .h-sub{font-size:clamp(13.5px,1vw,17px)}
+
+  /* orbit: fluid, and its core / ring / cards scale with its own width (cqw) */
+  .orbit{container-type:inline-size;height:auto;aspect-ratio:1/1;max-height:560px;width:100%;max-width:none}
+  .o-origin{
+    --core:clamp(84px,11cqw,116px);
+    left:0;top:0;width:100%;height:100%;transform:none;
+  }
   .o-origin>svg:not(.o-rays){display:none}
   .o-origin svg.o-rays{display:block;position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
   .o-origin .o-rays line{stroke:#7C74F0;stroke-width:1.2;opacity:.75}
-  .o-ring{inset:0;margin:auto;width:clamp(200px,38cqw,360px);height:clamp(200px,38cqw,360px);transform:none}
-  .o-core{left:calc(50% - 42px);top:calc(50% - 42px)}
-  .o-node{transform:translate(-50%,-50%)}
+  .o-ring{inset:0;margin:auto;width:clamp(200px,38cqw,420px);height:clamp(200px,38cqw,420px);transform:none}
+  .o-core{
+    width:var(--core);height:var(--core);
+    left:calc(50% - var(--core) / 2);top:calc(50% - var(--core) / 2);
+    font-size:calc(var(--core) * .43);
+  }
+  .o-node{
+    transform:translate(-50%,-50%);
+    padding:clamp(11px,1.4cqw,16px) clamp(18px,2.4cqw,28px);
+  }
+  .o-node b{font-size:clamp(15px,1.9cqw,20px)}
+  .o-node small{font-size:clamp(12px,1.4cqw,15px)}
   /* keep these in sync with the <line x2/y2> values in Hero.jsx */
   .o-node:nth-of-type(3){left:20%;top:8%}
   .o-node:nth-of-type(4){left:82%;top:20%}
@@ -124,15 +145,14 @@
   .o-node:nth-of-type(7){left:62%;top:90%}
 }
 
-/* wide screens: scale type up a little (columns are capped by .hero max-width now) */
-@media (min-width:1200px){
-  .hero h1{font-size:clamp(46px,3.9vw,72px)}
-  .h-sub{font-size:clamp(13.5px,1vw,15px)}
+/* very wide screens: a wider, shorter orbit so it fills its column instead of leaving gaps */
+@media (min-width:1300px){
+  .orbit{aspect-ratio:6/5;max-height:680px}
 }
 
 /* ===== Tablet / mobile ===== */
 @media (max-width:899px){
-  .hero{grid-template-columns:1fr;gap:12px;padding:40px 16px 48px}
+  .hero{grid-template-columns:1fr;gap:12px;padding:40px var(--page-gutter,16px) 48px}
   .hero h1 span{white-space:normal}
   .hero h1{font-size:clamp(32px,8.6vw,46px);margin-top:24px}
   .orbit{height:380px;max-width:420px;width:100%;margin:0 auto;overflow:hidden}
