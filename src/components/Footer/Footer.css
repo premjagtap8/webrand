@@ -1,6 +1,12 @@
 /* ==========================================================
-   Footer.css — Webrandustry (v2)
+   Footer.css — Webrandustry (v3)
    Tweak the variables below to restyle the whole footer.
+
+   v3 changes:
+   - Bottom corners are square, so the footer sits flush with the
+     bottom edge (no gaps showing at the bottom-left / bottom-right)
+   - Giant wordmark no longer cuts off the tail of the "y"
+   - Removed the duplicate (overridden) margin declaration
    ========================================================== */
 .ft {
   --ft-bg: #1b1838;
@@ -14,20 +20,20 @@
   --ft-card: rgba(255, 255, 255, 0.05);
   --ft-font: 'Poppins', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-    margin: 48px var(--page-gutter) 0;
-
   /* fluid sizing */
   --ft-pad-x: clamp(22px, 4vw, 56px);
-  --ft-mark-size: clamp(56px, 12vw, 190px);   /* giant wordmark */
-  --ft-mark-space: clamp(48px, 7vw, 110px);   /* room reserved for it */
+  --ft-radius: clamp(24px, 3vw, 32px);
+  --ft-mark-size: clamp(56px, 12vw, 190px);       /* giant wordmark */
+  --ft-mark-space: calc(var(--ft-mark-size) * 0.95); /* room reserved for it, incl. the "y" tail */
 
   position: relative;
   isolation: isolate;
   overflow: hidden;
   margin: 48px 0 0;
   padding: clamp(36px, 4.5vw, 56px) var(--ft-pad-x) var(--ft-mark-space);
-  border-radius: clamp(24px, 3vw, 32px);
+  border-radius: var(--ft-radius) var(--ft-radius) 0 0;   /* square bottom corners */
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 0;
   color: var(--ft-text);
   font-family: var(--ft-font);
   background:
@@ -54,16 +60,17 @@
   content: 'Webrandustry';
   position: absolute;
   left: 50%;
-  bottom: -0.2em;
+  bottom: 0;                       /* was -0.2em, which sliced the tail off the "y" */
   z-index: -1;
   transform: translateX(-50%);
   font-size: var(--ft-mark-size);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.35;               /* was 1: a taller box so descenders are painted */
+  padding-bottom: 0.04em;
   letter-spacing: -0.04em;
   white-space: nowrap;
   color: transparent;
-  background: linear-gradient(180deg, rgba(201, 197, 247, 0.22) 0%, rgba(109, 101, 238, 0) 80%);
+  background: linear-gradient(180deg, rgba(201, 197, 247, 0.24) 0%, rgba(109, 101, 238, 0.07) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   pointer-events: none;

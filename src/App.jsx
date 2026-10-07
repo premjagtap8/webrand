@@ -1,4 +1,3 @@
-
 import Navbar from './components/Navbar/Navbar.jsx'
 import Hero from './components/Hero/Hero.jsx'
 import WhatWeDo from './components/WhatWeDo/WhatWeDo.jsx'
@@ -11,23 +10,23 @@ import Insights from './components/Insights/Insights.jsx'
 import LetsTalk from './components/LetsTalk/LetsTalk.jsx'
 import Contact from './components/Contact/Contact.jsx'
 import Footer from './components/Footer/Footer.jsx'
-import CaseStudies from './components/CaseStudies/CaseStudies.jsx'
 
 function App() {
   return (
     <>
       <Navbar />
-      <Hero />
-      <WhatWeDo />
-      <OurServices />
-      <Industries />
-      <HowWeWork />
-      <WhyWebrandustry />
-      <OurWork />
-      <CaseStudies />
-      <Insights />
-      <LetsTalk />
-      <Contact />
+      <main className="site-main">
+        <Hero />
+        <WhatWeDo />
+        <OurServices />
+        <Industries />
+        <HowWeWork />
+        <WhyWebrandustry />
+        <OurWork />
+        <Insights />
+        <LetsTalk />
+        <Contact />
+      </main>
       <Footer />
     </>
   )

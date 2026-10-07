@@ -1,5 +1,7 @@
 :root {
   --page-gutter: clamp(16px, 3vw, 32px);
+  --page-bg: #F6F5F2;                         /* page colour; the navbar's cover strip uses this too */
+  --section-gap: clamp(24px, 3.5vw, 48px);    /* the one value that controls the space between sections */
 }
 
 *,
@@ -10,8 +12,37 @@
 
 body {
   margin: 0;
+  background: var(--page-bg);
 }
 
 #root {
   width: 100%;
 }
+
+/* =====================================================
+   Even spacing between all sections
+   (class names read from the real component CSS files)
+===================================================== */
+
+/* 1. every section: no outside space of its own, except the gap above it */
+.site-main > * {
+  margin-block: 0 !important;
+}
+.site-main > * + * {
+  margin-top: var(--section-gap) !important;
+}
+
+/* 2. plain sections: drop their own top/bottom padding and background,
+      so the page colour shows through and only the gap remains */
+.site-main > :is(.what, .os, .hw, .wy, .ow, .ins) {
+  padding-block: 0 !important;
+  background: transparent !important;
+}
+
+/* 3. hero keeps its top padding (it sits under the navbar), loses the bottom */
+.site-main > .hero {
+  padding-bottom: 0 !important;
+}
+
+/* 4. .ind, .lt and .cnt are boxed sections: their inner padding is part of
+      the design, so they only get rule 1 and 2's margin handling. */

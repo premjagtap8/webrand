@@ -17,24 +17,29 @@ const CATEGORIES = [
 ];
 
 /*
-  PLACEHOLDER DATA - replace titles, summaries and `image` with real projects.
+  DUMMY DATA - replace titles, summaries and `image` with real projects before launch.
   - `featured: true` -> shown under "All" (keep this to 6 or fewer)
-  - `image`: path/URL of a cover image. Leave null to show the blue gradient cover.
+  - `image`: path/URL of a cover image. Leave null to show the gradient cover.
   - `href`: link to the case study / project page.
+
+  Placeholder photos come from picsum.photos. Each seed always returns the same photo,
+  so the cards look stable. Swap in your own files (e.g. "/images/work/lumora.jpg") later.
 */
+const img = (seed) => `https://picsum.photos/seed/${seed}/800/500`;
+
 const PROJECTS = [
-  { id: 1, title: "Project title goes here", summary: "One line about the result.", category: "Branding", featured: true, image: null, href: "/our-work" },
-  { id: 2, title: "Project title goes here", summary: "One line about the result.", category: "Websites", featured: true, image: null, href: "/our-work" },
-  { id: 3, title: "Project title goes here", summary: "One line about the result.", category: "Software", featured: true, image: null, href: "/our-work" },
-  { id: 4, title: "Project title goes here", summary: "One line about the result.", category: "E-commerce", featured: true, image: null, href: "/our-work" },
-  { id: 5, title: "Project title goes here", summary: "One line about the result.", category: "Mobile Apps", featured: true, image: null, href: "/our-work" },
-  { id: 6, title: "Project title goes here", summary: "One line about the result.", category: "Packaging", featured: true, image: null, href: "/our-work" },
-  { id: 7, title: "Project title goes here", summary: "One line about the result.", category: "Graphic Design", featured: false, image: null, href: "/our-work" },
-  { id: 8, title: "Project title goes here", summary: "One line about the result.", category: "Digital Marketing", featured: false, image: null, href: "/our-work" },
-  { id: 9, title: "Project title goes here", summary: "One line about the result.", category: "IT Infrastructure", featured: false, image: null, href: "/our-work" },
-  { id: 10, title: "Project title goes here", summary: "One line about the result.", category: "3D Design & Printing", featured: false, image: null, href: "/our-work" },
-  { id: 11, title: "Project title goes here", summary: "One line about the result.", category: "Branding", featured: false, image: null, href: "/our-work" },
-  { id: 12, title: "Project title goes here", summary: "One line about the result.", category: "Websites", featured: false, image: null, href: "/our-work" },
+  { id: 1, title: "Lumora Skincare Rebrand", summary: "A fresh identity that made the range stand out on every shelf.", category: "Branding", featured: true, image: img("webrand-lumora"), href: "/our-work" },
+  { id: 2, title: "Northwind Logistics Website", summary: "A fast, clear site that doubled monthly quote requests.", category: "Websites", featured: true, image: img("webrand-northwind"), href: "/our-work" },
+  { id: 3, title: "ClinicFlow Patient Portal", summary: "Appointments and records in one secure platform for 12 clinics.", category: "Software", featured: true, image: img("webrand-clinicflow"), href: "/our-work" },
+  { id: 4, title: "Kaveri Handlooms Store", summary: "A mobile-first storefront with one-tap checkout.", category: "E-commerce", featured: true, image: img("webrand-kaveri"), href: "/our-work" },
+  { id: 5, title: "FitTrail Fitness App", summary: "A habit-tracking app that reached 50k installs in three months.", category: "Mobile Apps", featured: true, image: img("webrand-fittrail"), href: "/our-work" },
+  { id: 6, title: "Brewline Coffee Packaging", summary: "Shelf-ready pouch design that wins attention in a crowded aisle.", category: "Packaging", featured: true, image: img("webrand-brewline"), href: "/our-work" },
+  { id: 7, title: "Pulse Music Festival Campaign", summary: "Posters, social and stage visuals with one bold look.", category: "Graphic Design", featured: false, image: img("webrand-pulse"), href: "/our-work" },
+  { id: 8, title: "UrbanNest Lead Generation", summary: "Targeted ads and landing pages that cut cost per lead by 38%.", category: "Digital Marketing", featured: false, image: img("webrand-urbannest"), href: "/our-work" },
+  { id: 9, title: "Meridian Offices Network Rollout", summary: "Secure Wi-Fi and cabling across three floors with zero downtime.", category: "IT Infrastructure", featured: false, image: img("webrand-meridian"), href: "/our-work" },
+  { id: 10, title: "Aero Gadgets Prototypes", summary: "3D-printed product models ready for testing in days, not weeks.", category: "3D Design & Printing", featured: false, image: img("webrand-aero"), href: "/our-work" },
+  { id: 11, title: "Fernhill Organic Identity", summary: "A warm, natural brand system from logo to labels.", category: "Branding", featured: false, image: img("webrand-fernhill"), href: "/our-work" },
+  { id: 12, title: "Orbit Academy Learning Site", summary: "An easy-to-use course website with built-in enrolment.", category: "Websites", featured: false, image: img("webrand-orbit"), href: "/our-work" },
 ];
 
 const MAX_CARDS = 6;
@@ -166,7 +171,17 @@ const OurWork = ({ viewAllHref = "/our-work" }) => {
             <article className={`ow-card ow-card--t${(i % 4) + 1}`} key={p.id}>
               <a className="ow-card__link" href={p.href} aria-label={`${p.title} - ${p.category}`}>
                 <div className="ow-card__media">
-                  {p.image && <img src={p.image} alt="" loading="lazy" />}
+                  {p.image && (
+                    <img
+                      src={p.image}
+                      alt=""
+                      loading="lazy"
+                      /* if the photo can't load, hide it and the gradient cover shows instead */
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                  )}
                   <span className="ow-card__tag">{p.category}</span>
                   <span className="ow-card__go" aria-hidden="true">
                     <Arrow />
