@@ -1,4 +1,6 @@
+
 import { useEffect, useRef, useState } from 'react';
+import logo from '../../assets/images/WeBrandLogo.jpg';
 import './Navbar.css';
 
 const LINKS = [
@@ -19,45 +21,68 @@ const ArrowIcon = () => (
 );
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);   // mobile menu
-  const [active, setActive] = useState(0);   // highlighted link
-  const [stuck, setStuck] = useState(false); // shadow after scrolling
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const [stuck, setStuck] = useState(false);
   const navRef = useRef(null);
+
+  // WhatsApp number for Start a Project
+  const projectWhatsApp = 'https://wa.me/919619272938';
 
   // Escape or a click outside the nav closes the mobile menu
   useEffect(() => {
     if (!open) return;
-    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
-    const onDown = (e) => {
-      if (navRef.current && !navRef.current.contains(e.target)) setOpen(false);
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(false);
     };
+
+    const onDown = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
     document.addEventListener('keydown', onKey);
     document.addEventListener('pointerdown', onDown);
+
     return () => {
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('pointerdown', onDown);
     };
   }, [open]);
 
-  // Scroll-spy + shadow (rAF-throttled, uses viewport rects so it
-  // doesn't depend on which ancestor is the offsetParent)
+  // Scroll-spy + shadow
   useEffect(() => {
     const sections = LINKS.map((l) => document.querySelector(l.href));
     let ticking = false;
 
     const update = () => {
       ticking = false;
-      const line = 140; // px from viewport top that counts as "current"
+
+      const line = 140;
       let cur = 0;
       let best = -Infinity;
+
       sections.forEach((s, i) => {
         if (!s) return;
+
         const top = s.getBoundingClientRect().top;
-        if (top <= line && top > best) { best = top; cur = i; }
+
+        if (top <= line && top > best) {
+          best = top;
+          cur = i;
+        }
       });
-      // at the very bottom, the last link wins even if its section is short
-      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-      if (atBottom) cur = LINKS.length - 1;
+
+      // At the very bottom, the last link wins
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 4;
+
+      if (atBottom) {
+        cur = LINKS.length - 1;
+      }
 
       setActive(cur);
       setStuck(window.scrollY > 12);
@@ -72,7 +97,9 @@ export default function Navbar() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
+
     update();
+
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
@@ -80,25 +107,61 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav ref={navRef} className={`nav${stuck ? ' is-stuck' : ''}`} aria-label="Main">
-      <a className="logo" href="#top"><i>W</i>Webrandustry</a>
+    <nav
+      ref={navRef}
+      className={`nav${stuck ? ' is-stuck' : ''}`}
+      aria-label="Main"
+    >
+      <a className="logo" href="#top" aria-label="Webrandustry home">
+        <img
+          src={logo}
+          alt="Webrandustry"
+          width="90"
+          height="76"
+        />
+      </a>
 
       <ul
         id="navMenu"
         className={open ? 'open' : ''}
-        onClick={(e) => { if (e.target.closest('a')) setOpen(false); }}
+        onClick={(e) => {
+          if (e.target.closest('a')) setOpen(false);
+        }}
       >
         {LINKS.map((l, i) => (
-          <li key={l.href} className={i === active ? 'on' : ''}>
-            <a href={l.href} aria-current={i === active ? 'location' : undefined}>{l.label}</a>
+          <li
+            key={l.href}
+            className={i === active ? 'on' : ''}
+          >
+            <a
+              href={l.href}
+              aria-current={
+                i === active ? 'location' : undefined
+              }
+            >
+              {l.label}
+            </a>
           </li>
         ))}
+
+        {/* Mobile Start a Project */}
         <li className="nav-cta-m">
-          <a className="btn primary" href="#contact-us">Start a Project</a>
+          <a
+            className="btn primary"
+            href={projectWhatsApp}
+          >
+            Start a Project
+          </a>
         </li>
       </ul>
 
-      <a className="btn primary nav-cta" href="#contact-us">Start a Project <ArrowIcon /></a>
+      {/* Desktop Start a Project */}
+      <a
+        className="btn primary nav-cta"
+        href={projectWhatsApp}
+      >
+        Start a Project <ArrowIcon />
+      </a>
 
       <button
         className="nav-toggle"
@@ -108,7 +171,9 @@ export default function Navbar() {
         aria-controls="navMenu"
         onClick={() => setOpen((o) => !o)}
       >
-        <span /><span /><span />
+        <span />
+        <span />
+        <span />
       </button>
     </nav>
   );

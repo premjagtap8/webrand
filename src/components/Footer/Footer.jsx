@@ -68,16 +68,26 @@ export default function Footer() {
   return (
     <footer className="ft" aria-label="Site footer">
       <div className="ft-grid">
+
         {/* Brand */}
         <div className="ft-brand">
-          <a className="ft-logo" href="#top" aria-label="Webrandustry Digital Solutions">
+          <a
+            className="ft-logo"
+            href="#top"
+            aria-label="Webrandustry Digital Solutions"
+          >
             <i>W</i>
+
             <span>
               <b>Webrandustry</b>
               <small>Digital Solutions</small>
             </span>
           </a>
-          <p className="ft-tag">Building Brands. Creating Technology. Driving Growth.</p>
+
+          <p className="ft-tag">
+            Building Brands. Creating Technology. Driving Growth.
+          </p>
+
           <ul className="ft-chips">
             {chips.map((c) => (
               <li key={c}>{c}</li>
@@ -85,9 +95,10 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Quick links (two columns) */}
+        {/* Quick links */}
         <nav className="ft-col ft-links" aria-label="Quick links">
           <h4>Quick Links</h4>
+
           <ul>
             {quickLinks.map((l) => (
               <li key={l.label}>
@@ -100,15 +111,23 @@ export default function Footer() {
         {/* Contact */}
         <div className="ft-col">
           <h4>Let's Connect</h4>
+
           <ul className="ft-contact">
+
+            {/* WhatsApp */}
             <li>
               <span className="ft-ico">
                 <Icon>
                   <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
                 </Icon>
               </span>
-              <a href="tel:+910000000000">+91 00000 00000</a>
+
+              <a href="https://wa.me/919619272938">
+                +91 96192 72938
+              </a>
             </li>
+
+            {/* Email */}
             <li>
               <span className="ft-ico">
                 <Icon>
@@ -116,8 +135,13 @@ export default function Footer() {
                   <path d="m3 7 9 6 9-6" />
                 </Icon>
               </span>
-              <a href="mailto:hello@yourdomain.com">hello@yourdomain.com</a>
+
+              <a href="mailto:hello@yourdomain.com">
+                hello@yourdomain.com
+              </a>
             </li>
+
+            {/* Address */}
             <li>
               <span className="ft-ico">
                 <Icon>
@@ -125,14 +149,17 @@ export default function Footer() {
                   <circle cx="12" cy="9.5" r="2.6" />
                 </Icon>
               </span>
+
               <span>Your address, City, State</span>
             </li>
+
           </ul>
         </div>
 
         {/* Social */}
         <div className="ft-col">
           <h4>Follow Us</h4>
+
           <ul className="ft-social">
             {social.map((s) => (
               <li key={s.label}>
@@ -140,6 +167,7 @@ export default function Footer() {
                   <span className="ft-ico">
                     <Icon>{s.icon}</Icon>
                   </span>
+
                   <span>{s.label}</span>
                 </a>
               </li>
@@ -149,10 +177,26 @@ export default function Footer() {
       </div>
 
       <div className="ft-bar">
-        <p>© Webrandustry Digital Solutions. All Rights Reserved.</p>
-        <a className="ft-top" href="#top" aria-label="Back to top">
+        <p>
+          © Webrandustry Digital Solutions. All Rights Reserved.
+        </p>
+
+        <a
+          className="ft-top"
+          href="#top"
+          aria-label="Back to top"
+        >
           Back to top
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M12 19V5M5 12l7-7 7 7" />
           </svg>
         </a>

@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import "./HowWeWork.css";
 
@@ -51,18 +52,23 @@ const Arrow = () => (
   </svg>
 );
 
-const HowWeWork = ({ ctaHref = "/contact" }) => {
+const HowWeWork = () => {
   const listRef = useRef(null);
   const [inView, setInView] = useState(false);
+
+  // WhatsApp number for Start a Project
+  const projectWhatsApp = "https://wa.me/919619272938";
 
   /* One orchestrated moment: the connector lines draw in sequence the first time the steps scroll into view */
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
+
     if (typeof IntersectionObserver === "undefined") {
       setInView(true);
       return;
     }
+
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -72,7 +78,9 @@ const HowWeWork = ({ ctaHref = "/contact" }) => {
       },
       { threshold: 0.25 }
     );
+
     io.observe(el);
+
     return () => io.disconnect();
   }, []);
 
@@ -82,39 +90,56 @@ const HowWeWork = ({ ctaHref = "/contact" }) => {
         <header className="hw__head">
           <div>
             <span className="hw__pill">How We Work</span>
+
             <h2 id="hw-heading" className="hw__title">
               From Understanding
               <br />
               <span className="hw__accent">to Execution.</span>
             </h2>
+
             <p className="hw__sub">
-              Six clear steps, one connected team, from the first conversation to measurable growth.
+              Six clear steps, one connected team, from the first conversation
+              to measurable growth.
             </p>
           </div>
 
-          <a className="hw__cta" href={ctaHref}>
+          {/* Start a Project → WhatsApp */}
+          <a className="hw__cta" href={projectWhatsApp}>
             Start a Project
             <Arrow />
           </a>
         </header>
 
-        <ol className={`hw__list ${inView ? "is-in" : ""}`} ref={listRef}>
+        <ol
+          className={`hw__list ${inView ? "is-in" : ""}`}
+          ref={listRef}
+        >
           {STEPS.map((s, i) => (
             <li
               key={s.id}
-              className={`hw-step ${i === STEPS.length - 1 ? "hw-step--final" : ""}`}
+              className={`hw-step ${
+                i === STEPS.length - 1 ? "hw-step--final" : ""
+              }`}
               style={{ "--i": i }}
             >
               <div className="hw-step__top">
                 <span className="hw-step__num" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="hw-step__rail" aria-hidden="true" />
+
+                <span
+                  className="hw-step__rail"
+                  aria-hidden="true"
+                />
               </div>
+
               <h3 className="hw-step__title">
-                <span className="hw-sr">Step {i + 1}: </span>
+                <span className="hw-sr">
+                  Step {i + 1}:{" "}
+                </span>
                 {s.title}
               </h3>
+
               <p className="hw-step__text">{s.text}</p>
             </li>
           ))}
@@ -125,3 +150,4 @@ const HowWeWork = ({ ctaHref = "/contact" }) => {
 };
 
 export default HowWeWork;
+

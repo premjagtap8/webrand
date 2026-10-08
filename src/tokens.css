@@ -1,0 +1,177 @@
+/* =====================================================================
+   Webrandustry design tokens
+   Source: Brand Guidelines & Website Designer Reference (2026)
+   Ratio: 60% white/off-white, 25% navy, 10% cyan, 5% other accents
+   ===================================================================== */
+:root {
+  /* ---------- 1. Brand colours (raw) ---------- */
+  --navy:         #10303F;  /* nav, headings, footer, dark sections */
+  --cyan:         #16B7C8;  /* primary CTAs, links, tech accents */
+  --orange:       #F6A014;  /* high-priority CTA only, use sparingly */
+  --gold:         #FEC63B;  /* creative / 3D highlights */
+  --coral:        #F44858;  /* growth / marketing accents, badges */
+  --teal:         #13AEB4;  /* secondary digital accents */
+  --deep-blue:    #1E5A80;  /* technology sections, secondary dark */
+
+  /* ---------- 2. Neutrals ---------- */
+  --off-white:    #F6F8FA;  /* main page background */
+  --light-grey:   #E8EEF1;  /* borders, separators, soft panels */
+  --text-grey:    #53636B;  /* secondary / body text */
+  --almost-black: #172329;  /* strong text where navy is not used */
+  --white:        #FFFFFF;  /* text on dark, card surfaces */
+
+  /* ---------- 3. Tints (derived from the brand colours) ---------- */
+  --cyan-tint:    #E3F6F8;  /* chip / icon backgrounds */
+  --cyan-tint-2:  #F3FBFC;  /* very soft panels */
+  --cyan-border:  #BFE8EE;  /* borders on cyan-tinted items */
+  --navy-2:       #173D4F;  /* raised surface on navy */
+  --navy-3:       #1F4A5E;  /* borders / hover on navy */
+  --on-navy-muted:#B4C6CE;  /* secondary text on navy */
+
+  /* ---------- 4. Semantic tokens (use these in components) ---------- */
+  --color-bg:             var(--off-white);
+  --color-surface:        var(--white);
+  --color-surface-soft:   var(--off-white);
+  --color-border:         var(--light-grey);
+  --color-heading:        var(--navy);
+  --color-text:           var(--almost-black);
+  --color-text-muted:     var(--text-grey);
+
+  --color-primary:        var(--cyan);        /* primary button fill */
+  --color-primary-hover:  var(--teal);
+  --color-on-primary:     var(--navy);        /* white on cyan is only ~2.4:1, so use navy */
+  --color-cta-high:       var(--orange);      /* one or two high-priority actions only */
+  --color-on-cta-high:    var(--navy);
+
+  --color-link:           var(--deep-blue);   /* small cyan text on white fails contrast */
+  --color-link-hover:     var(--navy);
+  --color-link-on-dark:   var(--cyan);        /* cyan works on navy */
+  --color-focus:          var(--deep-blue);
+  --color-focus-on-dark:  var(--cyan);
+
+  --color-dark-bg:        var(--navy);
+  --color-on-dark:        var(--white);
+  --color-tech-bg:        var(--deep-blue);
+
+  /* form states */
+  --color-error:          var(--coral);
+  --color-success:        #1F9D6B;
+  --color-disabled-bg:    var(--light-grey);
+  --color-disabled-text:  #8A99A1;
+
+  /* ---------- 5. Capability colours ---------- */
+  --cap-brand:   var(--orange);
+  --cap-create:  var(--gold);
+  --cap-build:   var(--deep-blue);
+  --cap-grow:    var(--coral);
+  --cap-connect: var(--cyan);
+
+  /* ---------- 6. Typography ---------- */
+  --font-primary: "Manrope", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;   /* CTAs */
+  --fw-bold:     700;   /* headings */
+  --fw-extrabold:800;
+
+  --fs-h1: clamp(2.125rem, 1.2rem + 3.4vw, 4rem);
+  --fs-h2: clamp(1.75rem, 1.15rem + 2.3vw, 3rem);
+  --fs-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
+  --fs-h4: 1.125rem;
+  --fs-body: 1rem;
+  --fs-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --fs-small: 0.875rem;
+  --fs-xs: 0.78rem;
+
+  --lh-tight: 1.1;
+  --lh-heading: 1.18;
+  --lh-body: 1.6;
+
+  --ls-heading: -0.02em;
+
+  /* ---------- 7. Radius ---------- */
+  --radius-sm:   10px;
+  --radius-md:   12px;   /* cards: 12-18px */
+  --radius-lg:   18px;
+  --radius-xl:   28px;
+  --radius-pill: 999px;
+
+  /* ---------- 8. Spacing scale ---------- */
+  --space-1: 4px;  --space-2: 8px;   --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px;  --space-7: 48px; --space-8: 64px;
+  --space-9: 96px;
+
+  /* ---------- 9. Shadows (navy-tinted) ---------- */
+  --shadow-sm: 0 2px 8px rgba(16, 48, 63, .06);
+  --shadow-md: 0 10px 26px rgba(16, 48, 63, .10);
+  --shadow-lg: 0 24px 48px -20px rgba(16, 48, 63, .35);
+  --shadow-cta: 0 10px 22px -10px rgba(22, 183, 200, .65);
+
+  /* ---------- 9b. Glows and glass (built from the brand colours above) ----------
+     color-mix() keeps these tied to --cyan / --deep-blue / --navy / --white,
+     so changing a brand colour updates every glow automatically. */
+  --glow-cyan-ping:      color-mix(in srgb, var(--cyan) 50%, transparent);       /* pill status dot pulse */
+  --glow-cyan-ring:      color-mix(in srgb, var(--cyan) 18%, transparent);       /* ring around the W circle */
+  --glow-cyan-ring-soft: color-mix(in srgb, var(--cyan) 6%, transparent);        /* ring at its pulse peak */
+  --glow-cyan-bg:        color-mix(in srgb, var(--cyan) 22%, transparent);       /* hero background glow */
+  --glow-blue-bg:        color-mix(in srgb, var(--deep-blue) 12%, transparent);  /* hero background glow (blue) */
+  --glass-white:         color-mix(in srgb, var(--white) 82%, transparent);      /* frosted node cards */
+  --shadow-node-hover:   0 14px 34px color-mix(in srgb, var(--navy) 16%, transparent);
+
+  /* ---------- 10. Motion ---------- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---------- 11. Layout helpers still read by existing CSS ---------- */
+  --pin-top: 96px;
+  --page-bg: var(--off-white);   /* NEW: read by the navbar's corner fillers */
+
+  /* =================================================================
+     TEMPORARY LEGACY ALIASES
+     Old component CSS still reads these names (they used to live in
+     Home.css). Delete each alias once no CSS file references it.
+     ================================================================= */
+  --ink:      var(--navy);
+  --muted:    var(--text-grey);
+  --line:     var(--light-grey);
+  --tint:     var(--cyan-tint);
+  --tint-2:   var(--cyan-tint-2);
+  --indigo:   var(--deep-blue);   /* interim accent, readable with white text */
+  --indigo-d: var(--navy);
+  --cream:    var(--off-white);
+  --page:     var(--off-white);
+  --card:     var(--white);
+}
+
+/* ---------- Base document styles (low specificity on purpose) ---------- */
+:where(body) {
+  font-family: var(--font-primary);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:where(h1, h2, h3, h4) {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-bold);
+  color: var(--color-heading);
+  letter-spacing: var(--ls-heading);
+  line-height: var(--lh-heading);
+}
+:where(h1) { font-size: var(--fs-h1); line-height: var(--lh-tight); }
+:where(h2) { font-size: var(--fs-h2); }
+:where(h3) { font-size: var(--fs-h3); }
+:where(h4) { font-size: var(--fs-h4); }
+
+:where(a) { color: var(--color-link); }
+:where(a:hover) { color: var(--color-link-hover); }
+
+:where(button, input, select, textarea) { font-family: inherit; }
+
+:where(:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}

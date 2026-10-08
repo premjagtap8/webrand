@@ -17,9 +17,12 @@ const SeeMore = () => (
   </a>
 );
 
+// color = capability colour (tokens.css), ink = icon colour that stays readable on it
+// (navy on orange / gold / cyan, white on deep blue / coral)
 const CARDS = [
   {
     size: 's2', n: '01', title: 'Brand',
+    color: 'var(--cap-brand)', ink: 'var(--navy)',
     text: 'Build a distinctive identity that people remember.',
     chips: ['Brand Strategy', 'Logo Design', 'Packaging'], more: '+2',
     icon: (
@@ -34,6 +37,7 @@ const CARDS = [
   },
   {
     size: 's2', n: '02', title: 'Create',
+    color: 'var(--cap-create)', ink: 'var(--navy)',
     text: 'Turn ideas into compelling digital and physical experiences.',
     chips: ['Graphic Design', '3D Modelling', '3D Printing'], more: '+2',
     icon: (
@@ -51,6 +55,7 @@ const CARDS = [
   },
   {
     size: 's2', n: '03', title: 'Build',
+    color: 'var(--cap-build)', ink: 'var(--white)',
     text: 'Build the digital tools your business needs to operate.',
     chips: ['Websites', 'Mobile Apps', 'CRM'], more: '+6',
     icon: (
@@ -63,6 +68,7 @@ const CARDS = [
   },
   {
     size: 's3', n: '04', title: 'Grow',
+    color: 'var(--cap-grow)', ink: 'var(--white)',
     text: 'Turn visibility into engagement, leads and sales.',
     chips: ['Social Media', 'SEO', 'Google Ads', 'Lead Generation'], more: '+3',
     icon: (
@@ -74,6 +80,7 @@ const CARDS = [
   },
   {
     size: 's3', n: '05', title: 'Connect',
+    color: 'var(--cap-connect)', ink: 'var(--navy)',
     text: 'Build the technology infrastructure that keeps your business connected.',
     chips: ['Networks', 'Servers', 'Office IT', 'Cloud'], more: '+3',
     icon: (
@@ -171,7 +178,11 @@ export default function WhatWeDo() {
           );
 
           return (
-            <article className={`w-card ${c.size}`} key={c.n}>
+            <article
+              className={`w-card ${c.size}`}
+              key={c.n}
+              style={{ '--cap': c.color, '--cap-ink': c.ink }}
+            >
               {c.size === 's2' ? (
                 <>
                   <div className="w-head">

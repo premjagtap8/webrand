@@ -1,35 +1,42 @@
-/* ===== Why Webrandustry (matches WhyWebrandustry.jsx; everything is prefixed wy- so it can't clash with Home.css) ===== */
+/* ===== Why Webrandustry (brand v1) =====
+   Matches WhyWebrandustry.jsx; everything is prefixed wy- so it can't clash with other sections.
+   Cards: white surface, light grey border, 18px radius. Icon tiles: cyan tint with a deep blue icon.
+   Buttons: primary = cyan with navy text, secondary = white with a grey border and navy text.
+   Layouts: mobile up to 600px (1 column), tablet 601-1000px (2 columns), desktop 1001px+ (3 x 2). */
 .wy{
-  --wy-accent:var(--indigo,#4F46E5);
-  --wy-accent-deep:#3730A3;
-  --wy-ink:var(--ink,#0E0D1F);
-  --wy-muted:var(--muted,#6B6A85);
-  --wy-tint:var(--tint,#EEEDFD);
-  --wy-line:#E3E0F7;
-  --wy-ease:var(--ease,cubic-bezier(.22,1,.36,1));
+  --wy-accent:var(--cyan);
+  --wy-ink:var(--navy);
+  --wy-muted:var(--color-text-muted);
+  --wy-tint:var(--cyan-tint);
+  --wy-line:var(--light-grey);
+  --wy-ease:var(--ease);
   --wy-pad:18px;                                                              /* card padding: one knob for density */
 
-  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;  /* move to body when you can */
+  font-family:var(--font-primary);
   color:var(--wy-ink);
-  padding:clamp(36px,5vw,64px) 0;
+  padding:clamp(36px,5vw,64px) 0;                                             /* no background: the page's off-white shows through */
 }
 .wy *,.wy *::before,.wy *::after{box-sizing:border-box}
-.wy__inner{margin-inline:auto;padding-inline:clamp(16px,3vw,32px)}   /* same container as the other sections */
+.wy__inner{margin-inline:auto;padding-inline:clamp(16px,3vw,32px)}   /* full width, same container as the other sections */
 
 /* ---------- Header: centred, same scale as What We Do / Our Services ---------- */
 .wy__head{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:clamp(20px,3vw,32px)}
 .wy__pill{
-  display:inline-flex;align-items:center;padding:6px 14px;border:1px solid #D7D4EE;border-radius:999px;
-  background:#fff;color:var(--wy-accent);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  display:inline-flex;align-items:center;padding:6px 14px;
+  border:1px solid var(--cyan-border);border-radius:999px;
+  background:var(--white);color:var(--deep-blue);
+  font-size:11.5px;font-weight:var(--fw-semibold);letter-spacing:.14em;text-transform:uppercase;
 }
 .wy__title{
   margin:12px 0 0;
   font-size:clamp(28px,3.6vw,40px);
-  line-height:1.1;letter-spacing:-.03em;font-weight:600;text-wrap:balance;
+  line-height:1.1;letter-spacing:-.03em;font-weight:var(--fw-bold);color:var(--navy);text-wrap:balance;
 }
 .wy__accent{
-  background:linear-gradient(90deg,var(--wy-accent),#8B5CF6 60%,#06B6D4);
+  background:linear-gradient(90deg,var(--deep-blue),var(--cyan));           /* accent words: deep blue to cyan */
   -webkit-background-clip:text;background-clip:text;color:transparent;
+  -webkit-text-fill-color:transparent;
+  padding-bottom:.16em;margin-bottom:-.16em;                                /* keeps descenders (g, y) from being clipped */
 }
 .wy__lead{
   margin:10px auto 0;max-width:46em;
@@ -50,19 +57,19 @@
   column-gap:14px;row-gap:4px;align-items:start;
   padding:var(--wy-pad);
   border:1px solid var(--wy-line);border-radius:18px;
-  background:linear-gradient(180deg,#fff,#FBFAFF);
+  background:var(--white);
   transition:transform .35s var(--wy-ease),box-shadow .35s,border-color .3s;
 }
 .wy-card__ic{
   grid-column:1;grid-row:1 / span 2;
   width:36px;height:36px;border-radius:11px;display:grid;place-items:center;
-  background:var(--wy-tint);color:var(--wy-accent);
+  background:var(--wy-tint);color:var(--deep-blue);
   transition:background .3s,color .3s,transform .4s var(--wy-ease);
 }
 .wy-card__ic svg{width:18px;height:18px}
 .wy-card__title{
   grid-column:2;grid-row:1;margin:0;padding-right:44px;                      /* keeps the title clear of the number */
-  font-size:17px;line-height:1.25;font-weight:600;letter-spacing:-.015em;color:var(--wy-ink);
+  font-size:17px;line-height:1.25;font-weight:var(--fw-bold);letter-spacing:-.015em;color:var(--navy);
 }
 .wy-card__text{
   grid-column:2;grid-row:2;margin:0;
@@ -71,40 +78,49 @@
 /* faint index number, top right (delete the <span className="wy-card__n"> in the JSX to remove it) */
 .wy-card__n{
   position:absolute;top:12px;right:16px;
-  font-size:26px;line-height:1;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
-  color:color-mix(in srgb,var(--wy-accent) 14%,transparent);
+  font-size:26px;line-height:1;font-weight:var(--fw-bold);letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+  color:color-mix(in srgb,var(--deep-blue) 14%,transparent);
   transition:color .3s;pointer-events:none;
 }
 
 .wy-card:hover{
   transform:translateY(-4px);
-  border-color:var(--wy-accent);
-  box-shadow:0 16px 36px -10px color-mix(in srgb,var(--wy-accent) 24%,transparent);
+  border-color:var(--cyan);
+  box-shadow:0 16px 36px -10px color-mix(in srgb,var(--cyan) 38%,transparent);
 }
-.wy-card:hover .wy-card__ic{background:var(--wy-accent);color:#fff;transform:rotate(-6deg) scale(1.06)}
-.wy-card:hover .wy-card__n{color:color-mix(in srgb,var(--wy-accent) 30%,transparent)}
+.wy-card:hover .wy-card__ic{background:var(--cyan);color:var(--navy);transform:rotate(-6deg) scale(1.06)}   /* navy on cyan: white would fail contrast */
+.wy-card:hover .wy-card__n{color:color-mix(in srgb,var(--cyan) 40%,transparent)}
 
 /* ---------- Buttons ---------- */
 .wy__btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:clamp(24px,3vw,36px)}
 .wy-btn{
   display:inline-flex;align-items:center;gap:8px;
   padding:11px 22px;border-radius:999px;border:1px solid transparent;
-  font-size:14.5px;font-weight:600;text-decoration:none;
+  font-size:14.5px;font-weight:var(--fw-semibold);text-decoration:none;
   transition:transform .25s var(--wy-ease),box-shadow .25s,background .2s,border-color .25s,color .25s;
 }
 .wy-btn svg{width:16px;height:16px;transition:transform .3s var(--wy-ease)}
 .wy-btn:hover{transform:translateY(-2px)}
 .wy-btn:hover svg{transform:translateX(4px)}
-.wy-btn:focus-visible{outline:2px solid var(--wy-accent);outline-offset:3px}
+.wy-btn:active{transform:translateY(0) scale(.98)}
+.wy-btn:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px}
 
+/* primary: cyan with navy text */
 .wy-btn--primary{
-  background:var(--wy-accent);color:#fff;
-  box-shadow:0 10px 24px -12px color-mix(in srgb,var(--wy-accent) 80%,black);
+  background:var(--color-primary);color:var(--color-on-primary);
+  box-shadow:0 10px 24px -12px color-mix(in srgb,var(--cyan) 70%,var(--navy));
 }
-.wy-btn--primary:hover{background:var(--wy-accent-deep);box-shadow:0 14px 28px -12px color-mix(in srgb,var(--wy-accent) 80%,black)}
+.wy-btn--primary:hover{
+  background:var(--color-primary-hover);
+  box-shadow:0 14px 28px -12px color-mix(in srgb,var(--cyan) 70%,var(--navy));
+}
 
-.wy-btn--line{background:#fff;border-color:#D7D4EE;color:var(--wy-ink)}
-.wy-btn--line:hover{border-color:var(--wy-accent);color:var(--wy-accent);box-shadow:0 10px 24px color-mix(in srgb,var(--wy-accent) 14%,transparent)}
+/* secondary: white with a grey border and navy text */
+.wy-btn--line{background:var(--white);border-color:var(--light-grey);color:var(--navy)}
+.wy-btn--line:hover{
+  border-color:var(--cyan);color:var(--deep-blue);
+  box-shadow:0 10px 24px color-mix(in srgb,var(--navy) 10%,transparent);
+}
 
 /* ---------- Scroll reveal (classes are added by the component) ---------- */
 .wy .wy-pre{opacity:0}
@@ -112,13 +128,23 @@
 .wy .wy-in{animation:wy-rise .65s var(--wy-ease) backwards;animation-delay:var(--d,0s)}
 
 /* ---------- Responsive ---------- */
+/* tablet: 2 columns */
 @media (max-width:1000px){
   .wy__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* mobile: 1 column */
 @media (max-width:600px){
   .wy__grid{grid-template-columns:1fr}
   .wy__btns{flex-direction:column;align-items:stretch}
   .wy-btn{justify-content:center}
+}
+/* touch screens: no sticky hover lift, border or glow after a tap */
+@media (hover:none){
+  .wy-card:hover,
+  .wy-btn:hover{transform:none}
+  .wy-card:hover{border-color:var(--wy-line);box-shadow:none}
+  .wy-card:hover .wy-card__ic{background:var(--wy-tint);color:var(--deep-blue);transform:none}
+  .wy-card:hover .wy-card__n{color:color-mix(in srgb,var(--deep-blue) 14%,transparent)}
 }
 
 /* ---------- Reduced motion ---------- */

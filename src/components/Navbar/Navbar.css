@@ -1,20 +1,18 @@
 /* ==========================================================
-   Navbar.css — Webrandustry (v4)
-   Colours fall back to the theme values if Home.css variables
-   (--ink, --indigo, --line, --tint, --tint-2, --ease) are missing.
-
-   v3 changes:
-   - Nearly opaque glass background (was 80% / 88%)
-   - Stronger blur so content behind the bar isn't legible
-   - ::before strip fills the gap above the sticky bar so page
-     content no longer shows above the navbar
-   - --nv-top variable keeps `top` and the strip in sync
-   - Set --page-bg (in Home.css :root) to your real page colour
+   Navbar.css — Webrandustry (brand v6)
+   Follows the Brand Guidelines PDF + Colour Palette / UI Reference:
+   - White bar, Navy text, Cyan active underline
+   - Primary CTA: Cyan fill with Navy text (white on cyan fails contrast)
+   - Cards / bars: 12-18px radius, Light Grey border
+   - Focus: Deep Blue outline; font: Manrope via --font-primary
+   - Logo image only (no text beside it), sized so the lettering inside is readable
+   Uses tokens.css for variables. The JSX also uses .ic and .btn.primary
+   from base.css; the overrides below keep the navbar self-contained.
    ========================================================== */
 
-/* Sticky nav covers ~88px: keep anchored sections from hiding under it */
+/* Sticky nav covers ~112px (96px bar + 16px gap): keep anchored sections from hiding under it */
 html {
-  scroll-padding-top: 104px;
+  scroll-padding-top: 124px;
 }
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -26,35 +24,31 @@ html {
    NAVBAR (glass bar, shrinks slightly on scroll)
 ===================================================== */
 .nav {
-  --nv-ink: var(--ink, #1b1838);
-  --nv-indigo: var(--indigo, #4f46e5);
-  --nv-line: var(--line, #e6e4f0);
-  --nv-tint: var(--tint, #eeecff);
-  --nv-tint-2: var(--tint-2, #f5f4ff);
-  --nv-ease: var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
-  --nv-h: 72px;
-  --nv-top: 16px;                       /* gap above the bar; used by top + ::before */
+  --nv-h: 96px;                                      /* taller bar to fit the bigger logo */
+  --nv-top: 16px;                                    /* gap above the bar; used by top + ::after */
+  --nv-gutter: var(--page-gutter, 24px);             /* falls back to 24px if --page-gutter is not defined */
 
   position: sticky;
   top: var(--nv-top);
-  z-index: 100;                         /* was 50; stays above hero cards */
+  z-index: 100;                                      /* stays above hero cards */
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: var(--nv-h);
-  margin: 0 var(--page-gutter);
+  margin: 0 var(--nv-gutter);
   padding: 0 24px;
-  background: rgba(255, 255, 255, 0.94);                 /* was 0.8 */
-  -webkit-backdrop-filter: saturate(180%) blur(20px);    /* was blur(14px) */
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid var(--nv-line);
-  border-radius: 18px;
+  border: 1px solid var(--light-grey);
+  border-radius: var(--radius-lg);                   /* 18px */
   transition:
-    height 0.3s var(--nv-ease),
+    height 0.3s var(--ease),
     box-shadow 0.3s ease,
     background 0.3s ease;
 
-  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-primary);
+  color: var(--navy);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -64,17 +58,18 @@ html {
 .nav::after {
   content: '';
   position: absolute;
-  top: calc(-1 * var(--nv-top) - 1px);  /* -1px accounts for the border */
-  left: calc(-1 * var(--page-gutter, 0px));
-  right: calc(-1 * var(--page-gutter, 0px));
+  top: calc(-1 * var(--nv-top) - 1px);               /* -1px accounts for the border */
+  left: calc(-1 * var(--nv-gutter));
+  right: calc(-1 * var(--nv-gutter));
   height: var(--nv-top);
-  background: var(--page-bg, #fff);
+  background: var(--page-bg, var(--off-white));
   pointer-events: none;
   z-index: -1;
 }
 
-/* NEW: fills the two rounded top-corner cut-outs (18px = border-radius)
-   so dark sections underneath don't show through the corners. */
+/* Fills the two rounded top-corner cut-outs (18px = --radius-lg)
+   so dark sections underneath don't show through the corners.
+   NOTE: if --radius-lg changes, update the 18px / 17.5px values here. */
 .nav::before {
   content: '';
   position: absolute;
@@ -85,64 +80,65 @@ html {
   pointer-events: none;
   z-index: -1;
   background:
-    radial-gradient(circle at 18px 18px, transparent 17.5px, var(--page-bg, #fff) 18px) left top / 18px 18px no-repeat,
-    radial-gradient(circle at 0 18px, transparent 17.5px, var(--page-bg, #fff) 18px) right top / 18px 18px no-repeat;
+    radial-gradient(circle at 18px 18px, transparent 17.5px, var(--page-bg, var(--off-white)) 18px) left top / 18px 18px no-repeat,
+    radial-gradient(circle at 0 18px, transparent 17.5px, var(--page-bg, var(--off-white)) 18px) right top / 18px 18px no-repeat;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .nav {
-    background: #fff;
+    background: var(--white);
   }
 }
 
 .nav.is-stuck {
-  --nv-h: 64px;
-  background: rgba(255, 255, 255, 0.96);                 /* was 0.88 */
-  box-shadow: 0 12px 30px rgba(30, 27, 75, 0.1);
+  --nv-h: 80px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--shadow-md);
 }
 
-/* keyboard focus */
+/* keyboard focus (Deep Blue) */
 .nav a:focus-visible,
 .nav-toggle:focus-visible {
-  outline: 2px solid var(--nv-indigo);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
   border-radius: 8px;
 }
 
+/* FIX: the focus ring must keep each element's own shape
+   (pill CTA, round hamburger). Placed after the rule above so it wins. */
+.nav .btn:focus-visible {
+  border-radius: var(--radius-pill);
+}
+.nav-toggle:focus-visible {
+  border-radius: 50%;
+}
+
 /* =====================================================
-   LOGO
+   LOGO  (image only: the name is already inside the logo)
 ===================================================== */
 .logo {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 10px;
-  color: var(--nv-ink);
+  color: var(--navy);
   text-decoration: none;
-  font-size: 17px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
   cursor: pointer;
-  white-space: nowrap;
 }
 
-.logo i {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  background: var(--nv-indigo);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
-  font-style: normal;
-  transition: transform 0.3s var(--nv-ease), box-shadow 0.3s ease;
+.logo img {
+  display: block;
+  height: 76px;                                      /* big enough to read the lettering */
+  width: auto;                                       /* keeps the logo's own proportions */
+  object-fit: contain;
+  transition: height 0.3s var(--ease), transform 0.3s var(--ease);
 }
 
-.logo:hover i {
-  transform: rotate(-6deg) scale(1.05);
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
+.nav.is-stuck .logo img {
+  height: 62px;
+}
+
+.logo:hover img {
+  transform: scale(1.04);
 }
 
 /* =====================================================
@@ -162,9 +158,9 @@ html {
   padding: 6px 0;
   border-bottom: 2px solid transparent;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--fw-semibold);
   letter-spacing: -0.005em;
-  color: var(--nv-ink);
+  color: var(--navy);
 }
 
 .nav li a {
@@ -176,9 +172,9 @@ html {
   transition: color 0.25s ease;
 }
 
-/* ---------- active link ---------- */
+/* ---------- active link: navy text, cyan underline ---------- */
 .nav li.on {
-  color: var(--nv-indigo);
+  color: var(--navy);
 }
 
 .nav li.on::after {
@@ -189,11 +185,13 @@ html {
   bottom: -2px;
   height: 2px;
   border-radius: 2px;
-  background: var(--nv-indigo);
+  background: var(--cyan);
 }
 
-/* ---------- hover underline (desktop, mouse only) ---------- */
-@media (min-width: 900px) {
+/* ---------- hover underline (desktop, real mouse only) ----------
+   FIX: (hover: hover) stops the effect sticking on touch tablets
+   in landscape (wider than 900px). */
+@media (min-width: 900px) and (hover: hover) {
   .nav li:not(.on)::after {
     content: '';
     position: absolute;
@@ -202,10 +200,10 @@ html {
     bottom: -2px;
     height: 2px;
     border-radius: 2px;
-    background: var(--nv-indigo);
+    background: var(--cyan);
     transform: scaleX(0);
     transform-origin: right;           /* exits to the right … */
-    transition: transform 0.35s var(--nv-ease);
+    transition: transform 0.35s var(--ease);
   }
 
   .nav li:not(.on):hover::after {
@@ -214,12 +212,15 @@ html {
   }
 
   .nav li:hover a {
-    color: var(--nv-indigo);
+    color: var(--color-link);          /* Deep Blue */
   }
 }
 
 /* =====================================================
    CTA BUTTON
+   Primary CTA = Cyan fill + Navy text (set here so the navbar
+   never depends on another stylesheet for its look).
+   States: default / hover / active (focus handled above).
 ===================================================== */
 .nav .btn.primary {
   height: 44px;
@@ -229,21 +230,29 @@ html {
   flex-shrink: 0;
   gap: 8px;
   padding: 0 24px;
-  border-radius: 999px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);                  /* Cyan #16B7C8 */
+  color: var(--color-on-primary);                    /* Navy #10303F */
+  text-decoration: none;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   letter-spacing: -0.005em;
   white-space: nowrap;
-  transition: transform 0.25s var(--nv-ease), box-shadow 0.25s ease, background 0.25s ease;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s ease, background 0.25s ease;
 }
 
 .nav .btn.primary:hover {
+  background: var(--color-primary-hover);            /* Teal #13AEB4 */
+  color: var(--color-on-primary);
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.28);
+  box-shadow: var(--shadow-cta);                     /* cyan glow */
 }
 
 .nav .btn.primary:active {
   transform: translateY(0) scale(0.98);
+  box-shadow: none;
 }
 
 .nav .btn svg {
@@ -252,7 +261,7 @@ html {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
-  transition: transform 0.25s var(--nv-ease);
+  transition: transform 0.25s var(--ease);
 }
 
 .nav .btn:hover svg {
@@ -265,17 +274,21 @@ html {
 .nav-toggle {
   display: none;
   flex-shrink: 0;
-  width: 42px;
-  height: 42px;
+  width: 44px;                                       /* FIX: 44px minimum touch target (was 42px) */
+  height: 44px;
   border: none;
   border-radius: 50%;
-  background: var(--nv-tint);
+  background: var(--cyan-tint);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 4px;
   cursor: pointer;
-  transition: background 0.25s ease, transform 0.25s var(--nv-ease);
+  transition: background 0.25s ease, transform 0.25s var(--ease);
+}
+
+.nav-toggle:hover {
+  background: var(--cyan-border);
 }
 
 .nav-toggle:active {
@@ -287,8 +300,8 @@ html {
   width: 18px;
   height: 2px;
   border-radius: 2px;
-  background: var(--nv-ink);
-  transition: transform 0.3s var(--nv-ease), opacity 0.25s ease;
+  background: var(--navy);
+  transition: transform 0.3s var(--ease), opacity 0.25s ease;
 }
 
 .nav-toggle[aria-expanded='true'] span:nth-child(1) {
@@ -323,6 +336,23 @@ html {
   }
 }
 
+/* FIX: tightest desktop range, so the bar can't overflow at 900-1024px
+   (logo + 7 links + CTA). Comes after the block above so it wins. */
+@media (min-width: 900px) and (max-width: 1024px) {
+  .nav ul {
+    gap: 14px;
+  }
+  .nav li {
+    font-size: 13px;
+  }
+  .nav .btn.primary {
+    padding: 0 14px;
+  }
+  .nav .btn.primary svg {
+    display: none;
+  }
+}
+
 /* =====================================================
    TABLET / MOBILE — animated dropdown menu
 ===================================================== */
@@ -339,12 +369,18 @@ html {
 
 @media (max-width: 899px) {
   .nav {
-    --nv-h: 68px;
-    margin: 0 var(--page-gutter);   /* was 0 14px */
+    --nv-h: 84px;
     padding: 0 16px;
   }
   .nav.is-stuck {
-    --nv-h: 64px;
+    --nv-h: 72px;
+  }
+
+  .logo img {
+    height: 64px;
+  }
+  .nav.is-stuck .logo img {
+    height: 54px;
   }
 
   /* closed state: hidden but animatable (display:none can't transition) */
@@ -357,11 +393,17 @@ html {
     right: 0;
     top: calc(100% + 8px);
     padding: 10px;
-    background: #fff;
-    border: 1px solid var(--nv-line);
-    border-radius: 18px;
-    box-shadow: 0 18px 40px rgba(30, 27, 75, 0.12);
+    background: var(--white);
+    border: 1px solid var(--light-grey);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     z-index: 20;
+
+    /* FIX: menu scrolls inside itself on short screens (e.g. landscape phones) */
+    max-height: calc(100vh - var(--nv-h) - var(--nv-top) - 24px);   /* fallback */
+    max-height: calc(100dvh - var(--nv-h) - var(--nv-top) - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
 
     visibility: hidden;
     opacity: 0;
@@ -370,7 +412,7 @@ html {
     pointer-events: none;
     transition:
       opacity 0.25s ease,
-      transform 0.3s var(--nv-ease),
+      transform 0.3s var(--ease),
       visibility 0s linear 0.3s;
   }
 
@@ -384,7 +426,7 @@ html {
 
   /* staggered item entrance */
   .nav ul.open li {
-    animation: nav-item-in 0.35s var(--nv-ease) both;
+    animation: nav-item-in 0.35s var(--ease) both;
   }
   .nav ul.open li:nth-child(1) { animation-delay: 30ms; }
   .nav ul.open li:nth-child(2) { animation-delay: 60ms; }
@@ -400,7 +442,7 @@ html {
     padding: 0;
     border: 0;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: var(--fw-semibold);
     letter-spacing: -0.005em;
   }
 
@@ -411,18 +453,18 @@ html {
   .nav li a {
     display: block;
     padding: 13px 14px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     transition: background 0.2s ease, color 0.2s ease;
   }
 
   .nav li.on a {
-    background: var(--nv-tint);
-    color: var(--nv-indigo);
+    background: var(--cyan-tint);
+    color: var(--navy);
   }
 
-  /* FIX: the CTA is also a <li>, so exclude it or its hover turns white-on-tint */
+  /* the CTA is also a <li>, so exclude it from the hover tint */
   .nav li:not(.on):not(.nav-cta-m) a:hover {
-    background: var(--nv-tint-2);
+    background: var(--off-white);
   }
 
   .nav-cta-m {
@@ -445,24 +487,31 @@ html {
   }
 }
 
+/* FIX (optional): on tablets the header CTA is already visible,
+   so hide the duplicate "Start a Project" inside the dropdown.
+   Must come after the .nav-cta-m rule above. Delete this block
+   if you prefer to keep the button in both places. */
+@media (min-width: 561px) and (max-width: 899px) {
+  .nav-cta-m {
+    display: none;
+  }
+}
+
 /* =====================================================
    PHONES
 ===================================================== */
 @media (max-width: 560px) {
   .nav {
-    --nv-h: 64px;
-    margin: 0 var(--page-gutter);   /* was 0 10px */
+    --nv-h: 72px;
     padding: 0 12px;
   }
-
-  .logo {
-    font-size: 15px;
+  .nav.is-stuck {
+    --nv-h: 64px;
   }
 
-  .logo i {
-    width: 32px;
-    height: 32px;
-    font-size: 15px;
+  .logo img,
+  .nav.is-stuck .logo img {
+    height: 52px;
   }
 
   .nav .nav-cta {

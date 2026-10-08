@@ -1,47 +1,63 @@
-/* ===== Industries (section.ind#industries) =====
-   Uses the app's global tokens (--navy, --indigo, --ink, --ease) and derives
-   the card shades from them in one place, so the section stays on-theme. */
+/* ===== Industries (section.ind#industries) — brand v1 =====
+   Dark section per the brand guide: navy background, white text, cyan accents.
+   Cards sit one step lighter than the block (--navy-2), hover goes to --navy-3 with a cyan border.
+   Icon tile: cyan with a navy icon (white on cyan would fail contrast).
+   Contains the dark overrides for .pill and .sec-head that used to live in Home.css (.ind .pill / .ind .sec-head).
+   Layouts: mobile up to 560px (2 compact columns, 1 column under 360px), tablet 561-860px (2 columns),
+   desktop 861px+ (4 x 2), wide 1440px+ (horizontal cards).
+   Matches Industries.jsx class names (no JSX change needed). */
 
 .ind{
   /* local tokens: tweak card density / shades here */
-  --ind-card:#211F3F;
-  --ind-card-hover:#27244D;
-  --ind-line:#37345F;
-  --ind-accent:#8B7CF6;
-  --ind-accent-soft:#A99EFF;
-  --ind-chip:#312E5E;
-  --ind-chip-hover:#3B3772;
-  --ind-chip-text:#DAD6FF;
-  --ind-muted:#A8A6C4;
+  --ind-card:var(--navy-2);
+  --ind-card-hover:var(--navy-3);
+  --ind-line:var(--navy-3);
+  --ind-accent:var(--cyan);
+  --ind-chip:var(--navy-3);
+  --ind-chip-hover:color-mix(in srgb,var(--cyan) 22%,var(--navy-3));
+  --ind-chip-text:var(--cyan-tint);
+  --ind-muted:var(--on-navy-muted);
   --ind-pad:16px;
   --ind-radius:18px;
 
+  font-family:var(--font-primary);
   background:var(--navy);
   border-radius:30px;
   padding:clamp(40px,6vw,64px) clamp(16px,4vw,40px);
-  margin: 0 var(--page-gutter) 8px
+  margin:0 var(--page-gutter) 8px;
 }
 
-/* ---- Section head ---- */
-.ind .pill{background:#26224D;border-color:#3A3573;color:var(--ind-accent-soft)}
+/* ---- Section head (dark overrides for the shared .pill / .sec-head from base.css) ---- */
+.ind .pill{
+  background:var(--navy-2);
+  border-color:color-mix(in srgb,var(--cyan) 35%,transparent);
+  color:var(--cyan);                              /* cyan is fine on navy */
+}
 .ind .sec-head{max-width:none}
 .ind .sec-head h2{
-  color:#fff;
-  font-size:clamp(26px,3.4vw,38px);   /* fluid; replaces the 899px override */
+  color:var(--white);
+  font-size:clamp(26px,3.4vw,38px);               /* fluid; replaces the 899px override */
+  font-weight:var(--fw-bold);
   letter-spacing:-.02em;
   text-wrap:balance;
 }
 .ind .sec-head h2 .nw{white-space:normal}
-.ind .sec-head h2 em{color:#9B8CFF;display:block}
+.ind .sec-head h2 em{
+  display:block;
+  /* the deep blue to cyan gradient is too dark on navy, so the accent line is solid cyan here */
+  background:none;-webkit-background-clip:border-box;background-clip:border-box;
+  color:var(--cyan);
+  -webkit-text-fill-color:var(--cyan);            /* base.css hides the text with text-fill-color for the gradient, so reset it too */
+  padding-bottom:0;margin-bottom:0;
+}
 .ind .sec-head p{color:var(--ind-muted)}
 
-/* ---- Grid: 4 x 2, fills the section width (cap only for ultra-wide screens) ---- */
+/* ---- Grid: 4 x 2, fills the section width ---- */
 .i-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:14px;
   width:100%;
-  
   margin-inline:auto;
 }
 
@@ -70,20 +86,20 @@
   transform:translateY(-3px);          /* lift only: no scale, so text stays crisp */
   box-shadow:
     0 16px 32px -16px rgba(0,0,0,.6),
-    0 0 0 1px rgba(139,124,246,.28);
+    0 0 0 1px color-mix(in srgb,var(--cyan) 30%,transparent);
 }
 .i-card:has(a:focus-visible){
-  outline:2px solid var(--ind-accent-soft);
+  outline:2px solid var(--cyan);
   outline-offset:2px;
 }
 
 .i-card h3{
   margin:0;
   font-size:16px;
-  font-weight:600;
+  font-weight:var(--fw-bold);
   line-height:1.25;
   letter-spacing:-.01em;
-  color:#fff;
+  color:var(--white);                  /* explicit: the global h3 colour is navy */
   text-wrap:balance;
 }
 
@@ -91,20 +107,20 @@
 .i-card h3 a{color:inherit;text-decoration:none}
 .i-card h3 a::after{content:"";position:absolute;inset:0;border-radius:inherit}
 
-/* ---- Icon tile ---- */
+/* ---- Icon tile: cyan with a navy icon ---- */
 .i-ic{
   width:38px;
   height:38px;
   border-radius:11px;
-  background:var(--indigo);
-  color:#fff;
+  background:var(--cyan);
+  color:var(--navy);
   display:grid;
   place-items:center;
   transition:background .3s,transform .35s var(--ease);
 }
 .i-ic .ic{width:18px;height:18px}
 .i-card:hover .i-ic,
-.i-card:focus-within .i-ic{background:#6B5CF6;transform:rotate(-6deg)}
+.i-card:focus-within .i-ic{background:var(--color-primary-hover);transform:rotate(-6deg)}   /* teal hover, icon stays navy */
 
 /* ---- Arrow badge (revealed on hover / focus) ---- */
 .i-go{
@@ -114,8 +130,8 @@
   width:26px;
   height:26px;
   border-radius:50%;
-  background:#fff;
-  color:var(--indigo);
+  background:var(--white);
+  color:var(--navy);
   display:grid;
   place-items:center;
   opacity:0;
@@ -147,42 +163,51 @@
 }
 .i-card .chips li.more{
   background:transparent;
-  border-color:#4A4680;
+  border-color:color-mix(in srgb,var(--cyan) 35%,transparent);
   color:var(--ind-muted);
 }
 .i-card:hover .chips li:not(.more),
 .i-card:focus-within .chips li:not(.more){
   background:var(--ind-chip-hover);
-  color:#fff;
+  color:var(--white);
 }
 
-/* ---- CTA ---- */
+/* ---- CTA: primary button (cyan with navy text) ---- */
 .i-cta{margin-top:32px;text-align:center}
 .i-cta a{
   display:inline-flex;
   align-items:center;
   gap:10px;
-  background:#fff;
-  color:var(--ink);
+  background:var(--color-primary);
+  color:var(--color-on-primary);
   padding:14px 26px;
   border-radius:999px;
-  font-weight:500;
+  font-weight:var(--fw-semibold);
   font-size:15px;
   text-decoration:none;
-  transition:transform .25s var(--ease),box-shadow .25s;
+  transition:transform .25s var(--ease),box-shadow .25s,background .25s;
 }
 .i-cta a:hover{
   transform:translateY(-2px);
-  box-shadow:0 10px 24px -10px rgba(255,255,255,.35);
+  background:var(--color-primary-hover);
+  box-shadow:0 10px 24px -10px color-mix(in srgb,var(--cyan) 55%,transparent);
 }
-.i-cta a:focus-visible{outline:2px solid var(--ind-accent-soft);outline-offset:3px}
+.i-cta a:active{transform:translateY(0) scale(.98)}
+.i-cta a:focus-visible{outline:2px solid var(--white);outline-offset:3px}
 .i-cta .ic{width:16px;height:16px;transition:transform .25s var(--ease)}
 .i-cta a:hover .ic{transform:translateX(3px)}
 
-/* ---- Touch devices: no hover, so keep the arrow visible ---- */
+/* ---- Touch devices: no hover, so keep the arrow visible and drop sticky hover styles ---- */
 @media (hover:none){
   .i-go{opacity:1;transform:none}
   .i-card:hover{transform:none}
+  .i-card:hover:not(:focus-within){
+    background:var(--ind-card);
+    border-color:var(--ind-line);
+    box-shadow:none;
+  }
+  .i-card:hover:not(:focus-within) .i-ic{background:var(--cyan);transform:none}
+  .i-cta a:hover{transform:none}
 }
 
 /* ---- Reduced motion ---- */

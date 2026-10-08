@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./OurWork.css";
 
+import pawpaaLogo from "../../assets/images/pawpaa-logo.png.jpeg";
+import lifecareLogo from "../../assets/images/lifecare-logo.png.jpeg";
+import autocalLogo from "../../assets/images/autocal-logo.png.jpeg";
+
 /* Categories come straight from the website copy (docx). */
 const CATEGORIES = [
   "All",
@@ -17,29 +21,20 @@ const CATEGORIES = [
 ];
 
 /*
-  DUMMY DATA - replace titles, summaries and `image` with real projects before launch.
+  CLIENT WORK
   - `featured: true` -> shown under "All" (keep this to 6 or fewer)
-  - `image`: path/URL of a cover image. Leave null to show the gradient cover.
-  - `href`: link to the case study / project page.
-
-  Placeholder photos come from picsum.photos. Each seed always returns the same photo,
-  so the cards look stable. Swap in your own files (e.g. "/images/work/lumora.jpg") later.
+  - `logo: true`     -> the image is a logo, so the card shows it whole on white (no cropping)
+  - `category`       -> "Client Work" for now. The tag on the card is hidden while it says
+                        "Client Work", and these cards only appear under "All". When your lead
+                        confirms what was done for each client, change it to a real category
+                        (e.g. "Branding") and the tag and the filter tab will start working.
+  - `summary`        -> leave "" until the real description is confirmed; the card hides it.
+  - `href`           -> link to the case study / project page.
 */
-const img = (seed) => `https://picsum.photos/seed/${seed}/800/500`;
-
 const PROJECTS = [
-  { id: 1, title: "Lumora Skincare Rebrand", summary: "A fresh identity that made the range stand out on every shelf.", category: "Branding", featured: true, image: img("webrand-lumora"), href: "/our-work" },
-  { id: 2, title: "Northwind Logistics Website", summary: "A fast, clear site that doubled monthly quote requests.", category: "Websites", featured: true, image: img("webrand-northwind"), href: "/our-work" },
-  { id: 3, title: "ClinicFlow Patient Portal", summary: "Appointments and records in one secure platform for 12 clinics.", category: "Software", featured: true, image: img("webrand-clinicflow"), href: "/our-work" },
-  { id: 4, title: "Kaveri Handlooms Store", summary: "A mobile-first storefront with one-tap checkout.", category: "E-commerce", featured: true, image: img("webrand-kaveri"), href: "/our-work" },
-  { id: 5, title: "FitTrail Fitness App", summary: "A habit-tracking app that reached 50k installs in three months.", category: "Mobile Apps", featured: true, image: img("webrand-fittrail"), href: "/our-work" },
-  { id: 6, title: "Brewline Coffee Packaging", summary: "Shelf-ready pouch design that wins attention in a crowded aisle.", category: "Packaging", featured: true, image: img("webrand-brewline"), href: "/our-work" },
-  { id: 7, title: "Pulse Music Festival Campaign", summary: "Posters, social and stage visuals with one bold look.", category: "Graphic Design", featured: false, image: img("webrand-pulse"), href: "/our-work" },
-  { id: 8, title: "UrbanNest Lead Generation", summary: "Targeted ads and landing pages that cut cost per lead by 38%.", category: "Digital Marketing", featured: false, image: img("webrand-urbannest"), href: "/our-work" },
-  { id: 9, title: "Meridian Offices Network Rollout", summary: "Secure Wi-Fi and cabling across three floors with zero downtime.", category: "IT Infrastructure", featured: false, image: img("webrand-meridian"), href: "/our-work" },
-  { id: 10, title: "Aero Gadgets Prototypes", summary: "3D-printed product models ready for testing in days, not weeks.", category: "3D Design & Printing", featured: false, image: img("webrand-aero"), href: "/our-work" },
-  { id: 11, title: "Fernhill Organic Identity", summary: "A warm, natural brand system from logo to labels.", category: "Branding", featured: false, image: img("webrand-fernhill"), href: "/our-work" },
-  { id: 12, title: "Orbit Academy Learning Site", summary: "An easy-to-use course website with built-in enrolment.", category: "Websites", featured: false, image: img("webrand-orbit"), href: "/our-work" },
+  { id: 1, title: "Pawpaa", summary: "", category: "Client Work", featured: true, logo: true, image: pawpaaLogo, href: "/our-work" },
+  { id: 2, title: "Life Care Charitable Trust", summary: "", category: "Client Work", featured: true, logo: true, image: lifecareLogo, href: "/our-work" },
+  { id: 3, title: "Autocal", summary: "", category: "Client Work", featured: true, logo: true, image: autocalLogo, href: "/our-work" },
 ];
 
 const MAX_CARDS = 6;
@@ -159,42 +154,57 @@ const OurWork = ({ viewAllHref = "/our-work" }) => {
         </div>
 
         {/* Cards */}
-        <div
-          className="ow__track"
-          ref={trackRef}
-          onScroll={updateScrollState}
-          key={active}
-          tabIndex={0}
-          aria-label={`${active} projects`}
-        >
-          {visible.map((p, i) => (
-            <article className={`ow-card ow-card--t${(i % 4) + 1}`} key={p.id}>
-              <a className="ow-card__link" href={p.href} aria-label={`${p.title} - ${p.category}`}>
-                <div className="ow-card__media">
-                  {p.image && (
-                    <img
-                      src={p.image}
-                      alt=""
-                      loading="lazy"
-                      /* if the photo can't load, hide it and the gradient cover shows instead */
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                  )}
-                  <span className="ow-card__tag">{p.category}</span>
-                  <span className="ow-card__go" aria-hidden="true">
-                    <Arrow />
-                  </span>
-                </div>
-                <div className="ow-card__body">
-                  <h3 className="ow-card__title">{p.title}</h3>
-                  <p className="ow-card__summary">{p.summary}</p>
-                </div>
-              </a>
-            </article>
-          ))}
-        </div>
+        {visible.length === 0 ? (
+          <p className="ow__empty" role="status">
+            New {active} projects are coming soon.
+          </p>
+        ) : (
+          <div
+            className="ow__track"
+            ref={trackRef}
+            onScroll={updateScrollState}
+            key={active}
+            tabIndex={0}
+            aria-label={`${active} projects`}
+          >
+            {visible.map((p, i) => (
+              <article
+                className={`ow-card ow-card--t${(i % 4) + 1}${p.logo ? " ow-card--logo" : ""}`}
+                key={p.id}
+              >
+                <a
+                  className="ow-card__link"
+                  href={p.href}
+                  aria-label={p.category === "Client Work" ? p.title : `${p.title} - ${p.category}`}
+                >
+                  <div className="ow-card__media">
+                    {p.image && (
+                      <img
+                        src={p.image}
+                        alt=""
+                        loading="lazy"
+                        /* if the image can't load, hide it and the gradient cover shows instead */
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    )}
+                    {p.category !== "Client Work" && (
+                      <span className="ow-card__tag">{p.category}</span>
+                    )}
+                    <span className="ow-card__go" aria-hidden="true">
+                      <Arrow />
+                    </span>
+                  </div>
+                  <div className="ow-card__body">
+                    <h3 className="ow-card__title">{p.title}</h3>
+                    {p.summary && <p className="ow-card__summary">{p.summary}</p>}
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        )}
 
         {/* Footer: progress + CTA */}
         <footer className="ow__foot">

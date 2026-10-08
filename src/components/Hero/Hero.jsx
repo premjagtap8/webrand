@@ -1,12 +1,15 @@
+
 import { useEffect, useRef } from 'react';
 import './Hero.css';
 
+// color = capability colour from tokens.css
+// (BRAND orange, CREATE gold, BUILD deep blue, CONNECT cyan, GROW coral)
 const NODES = [
-  { dx: '-91px', dy: '-171px', title: 'Brand', sub: 'Identity · Logo' },
-  { dx: '120px', dy: '-129px', title: 'Create', sub: 'Design · 3D' },
-  { dx: '129px', dy: '8px', title: 'Build', sub: 'Web · Software' },
-  { dx: '-112px', dy: '72px', title: 'Connect', sub: 'Network · IT' },
-  { dx: '68px', dy: '163px', title: 'Grow', sub: 'SEO · Ads' },
+  { dx: '-91px', dy: '-171px', title: 'Brand', sub: 'Identity · Logo', color: 'var(--cap-brand)' },
+  { dx: '120px', dy: '-129px', title: 'Create', sub: 'Design · 3D', color: 'var(--cap-create)' },
+  { dx: '129px', dy: '8px', title: 'Build', sub: 'Web · Software', color: 'var(--cap-build)' },
+  { dx: '-112px', dy: '72px', title: 'Connect', sub: 'Network · IT', color: 'var(--cap-connect)' },
+  { dx: '68px', dy: '163px', title: 'Grow', sub: 'SEO · Ads', color: 'var(--cap-grow)' },
 ];
 
 const ArrowIcon = () => (
@@ -20,6 +23,9 @@ export default function Hero() {
   const heroRef = useRef(null);
   const orbitRef = useRef(null);
 
+  // WhatsApp number for Start a Project
+  const projectWhatsApp = 'https://wa.me/919619272938';
+
   // Pointer parallax on the orbit (skipped for reduced motion)
   useEffect(() => {
     const hero = heroRef.current;
@@ -28,11 +34,21 @@ export default function Hero() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const clamp = (v) => Math.max(-1, Math.min(1, v));
+
     const onMove = (e) => {
       const r = orbit.getBoundingClientRect();
-      orbit.style.setProperty('--px', clamp(((e.clientX - r.left) / r.width - 0.5) * 2));
-      orbit.style.setProperty('--py', clamp(((e.clientY - r.top) / r.height - 0.5) * 2));
+
+      orbit.style.setProperty(
+        '--px',
+        clamp(((e.clientX - r.left) / r.width - 0.5) * 2)
+      );
+
+      orbit.style.setProperty(
+        '--py',
+        clamp(((e.clientY - r.top) / r.height - 0.5) * 2)
+      );
     };
+
     const onLeave = () => {
       orbit.style.setProperty('--px', 0);
       orbit.style.setProperty('--py', 0);
@@ -40,6 +56,7 @@ export default function Hero() {
 
     hero.addEventListener('pointermove', onMove);
     hero.addEventListener('pointerleave', onLeave);
+
     return () => {
       hero.removeEventListener('pointermove', onMove);
       hero.removeEventListener('pointerleave', onLeave);
@@ -57,22 +74,41 @@ export default function Hero() {
           </svg>{' '}
           Webrandustry Digital Solutions
         </span>
+
         <h1>
           <span>Building Brands.</span>
           <span>Creating Technology.</span>
           <em>Driving Growth.</em>
         </h1>
-        <p>We bring branding, design, technology, marketing and IT infrastructure together to help businesses launch, operate and grow.</p>
+
+        <p>
+          We bring branding, design, technology, marketing and IT
+          infrastructure together to help businesses launch, operate and grow.
+        </p>
+
         <div className="btns">
-          <a className="btn primary" href="#contact-us">Start a Project <ArrowIcon /></a>
-          <a className="btn ghost-btn" href="#lets-talk">Talk to Our Experts</a>
+          {/* Start a Project → WhatsApp */}
+          <a
+            className="btn primary"
+            href={projectWhatsApp}
+          >
+            Start a Project <ArrowIcon />
+          </a>
+
+          <a className="btn ghost-btn" href="#lets-talk">
+            Talk to Our Experts
+          </a>
         </div>
-        <div className="h-sub">Branding · Software · Marketing · IT · 3D</div>
+
+        <div className="h-sub">
+          Branding · Software · Marketing · IT · 3D
+        </div>
       </div>
 
       <div className="orbit" ref={orbitRef}>
         <div className="o-origin">
           <div className="o-ring" />
+
           <svg>
             <g>
               <line x1="0" y1="0" x2="-91" y2="-171" />
@@ -82,7 +118,8 @@ export default function Hero() {
               <line x1="0" y1="0" x2="68" y2="163" />
             </g>
           </svg>
-          {/* desktop rays: these end points match the node positions in Hero.css (left / top of .o-node:nth-of-type) */}
+
+          {/* Desktop rays */}
           <svg className="o-rays" aria-hidden="true">
             <line x1="50%" y1="50%" x2="20%" y2="8%" />
             <line x1="50%" y1="50%" x2="82%" y2="20%" />
@@ -90,9 +127,19 @@ export default function Hero() {
             <line x1="50%" y1="50%" x2="6%" y2="66%" />
             <line x1="50%" y1="50%" x2="62%" y2="90%" />
           </svg>
+
           <div className="o-core">W</div>
+
           {NODES.map((n) => (
-            <div className="o-node" key={n.title} style={{ '--dx': n.dx, '--dy': n.dy }}>
+            <div
+              className="o-node"
+              key={n.title}
+              style={{
+                '--dx': n.dx,
+                '--dy': n.dy,
+                '--cap': n.color,
+              }}
+            >
               <b>{n.title}</b>
               <small>{n.sub}</small>
             </div>

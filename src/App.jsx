@@ -10,11 +10,13 @@ import Insights from './components/Insights/Insights.jsx'
 import LetsTalk from './components/LetsTalk/LetsTalk.jsx'
 import Contact from './components/Contact/Contact.jsx'
 import Footer from './components/Footer/Footer.jsx'
+import { sendEnquiry } from './api/enquiry.js'
 
 function App() {
   return (
     <>
       <Navbar />
+
       <main className="site-main">
         <Hero />
         <WhatWeDo />
@@ -25,8 +27,15 @@ function App() {
         <OurWork />
         <Insights />
         <LetsTalk />
-        <Contact />
+
+        <Contact
+          onSubmit={sendEnquiry}
+          phone="+91 96192 72938"
+          phoneHref="https://wa.me/919619272938"
+          email="hello@yourdomain.com"
+        />
       </main>
+
       <Footer />
     </>
   )

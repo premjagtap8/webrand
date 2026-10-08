@@ -1,44 +1,43 @@
 /* ==========================================================
-   Footer.css — Webrandustry (v3)
-   Tweak the variables below to restyle the whole footer.
+   Footer.css — Webrandustry (brand version)
+   Navy footer with white / on-navy-muted text and cyan accents.
+   Tokens only, no hard-coded brand hex values. Font: Manrope.
+   Tweak the --ft-* variables below to restyle the whole footer.
 
-   v3 changes:
-   - Bottom corners are square, so the footer sits flush with the
-     bottom edge (no gaps showing at the bottom-left / bottom-right)
-   - Giant wordmark no longer cuts off the tail of the "y"
-   - Removed the duplicate (overridden) margin declaration
+   The old "isolation layer" is gone: Home.css no longer exists,
+   so nothing global leaks into the footer any more.
+   The footer sits outside <main>, so it keeps its own top margin.
    ========================================================== */
 .ft {
-  --ft-bg: #1b1838;
-  --ft-bg-2: #26224d;
-  --ft-accent: #4f46e5;
-  --ft-accent-2: #6d65ee;
-  --ft-accent-soft: #c9c5f7;
-  --ft-text: #ffffff;
-  --ft-muted: rgba(255, 255, 255, 0.72);
-  --ft-line: rgba(255, 255, 255, 0.1);
+  --ft-bg: var(--navy);
+  --ft-bg-2: var(--navy-2);
+  --ft-accent: var(--cyan);
+  --ft-accent-soft: var(--cyan-border);
+  --ft-text: var(--white);
+  --ft-muted: var(--on-navy-muted);
+  --ft-line: var(--navy-3);
   --ft-card: rgba(255, 255, 255, 0.05);
-  --ft-font: 'Poppins', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ft-font: var(--font-primary);
 
   /* fluid sizing */
   --ft-pad-x: clamp(22px, 4vw, 56px);
   --ft-radius: clamp(24px, 3vw, 32px);
-  --ft-mark-size: clamp(56px, 12vw, 190px);       /* giant wordmark */
-  --ft-mark-space: calc(var(--ft-mark-size) * 0.95); /* room reserved for it, incl. the "y" tail */
+  --ft-mark-size: clamp(56px, 12vw, 190px);          /* giant wordmark */
+  --ft-mark-space: calc(var(--ft-mark-size) * 1.2);  /* room reserved for it, incl. the "y" tail; keeps it clear of the bottom bar */
 
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  margin: 48px 0 0;
+  margin: var(--section-gap, 48px) 0 0;
   padding: clamp(36px, 4.5vw, 56px) var(--ft-pad-x) var(--ft-mark-space);
   border-radius: var(--ft-radius) var(--ft-radius) 0 0;   /* square bottom corners */
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--ft-line);
   border-bottom: 0;
   color: var(--ft-text);
   font-family: var(--ft-font);
   background:
-    radial-gradient(520px 320px at 8% 0%, rgba(79, 70, 229, 0.45), transparent 70%),
-    radial-gradient(420px 260px at 100% 100%, rgba(109, 101, 238, 0.22), transparent 70%),
+    radial-gradient(520px 320px at 8% 0%, rgba(22, 183, 200, 0.28), transparent 70%),
+    radial-gradient(420px 260px at 100% 100%, rgba(22, 183, 200, 0.14), transparent 70%),
     linear-gradient(160deg, var(--ft-bg-2) 0%, var(--ft-bg) 55%);
 }
 
@@ -55,22 +54,23 @@
   pointer-events: none;
 }
 
-/* giant gradient wordmark (current trend) */
+/* giant wordmark, a faint cyan fade on navy */
 .ft::after {
   content: 'Webrandustry';
   position: absolute;
   left: 50%;
-  bottom: 0;                       /* was -0.2em, which sliced the tail off the "y" */
+  bottom: 0;
   z-index: -1;
   transform: translateX(-50%);
+  font-family: var(--ft-font);
   font-size: var(--ft-mark-size);
-  font-weight: 700;
-  line-height: 1.35;               /* was 1: a taller box so descenders are painted */
+  font-weight: var(--fw-bold);
+  line-height: 1.35;               /* a taller box so descenders (the "y") are painted */
   padding-bottom: 0.04em;
   letter-spacing: -0.04em;
   white-space: nowrap;
   color: transparent;
-  background: linear-gradient(180deg, rgba(201, 197, 247, 0.24) 0%, rgba(109, 101, 238, 0.07) 100%);
+  background: linear-gradient(180deg, rgba(22, 183, 200, 0.22) 0%, rgba(22, 183, 200, 0.05) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   pointer-events: none;
@@ -95,7 +95,7 @@
 }
 
 .ft a:focus-visible {
-  outline: 2px solid var(--ft-accent-soft);
+  outline: 2px solid var(--color-focus-on-dark);
   outline-offset: 4px;
   border-radius: 8px;
 }
@@ -116,36 +116,38 @@
   gap: 14px;
 }
 
+/* placeholder "W" tile: cyan with a navy letter. Replace with the real logo when it arrives */
 .ft-logo i {
   display: grid;
   place-items: center;
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: var(--ft-accent);
-  color: #fff;
+  background: var(--cyan);
+  color: var(--navy);
   font-style: normal;
   font-size: 24px;
-  font-weight: 700;
-  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.45);
+  font-weight: var(--fw-bold);
+  box-shadow: var(--shadow-cta);
 }
 
 .ft-logo b {
   display: block;
   font-size: 26px;
   line-height: 1.1;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   letter-spacing: -0.01em;
+  color: var(--white);
 }
 
 .ft-logo small {
   display: block;
   margin-top: 4px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--ft-accent-2);
+  color: var(--cyan);
 }
 
 .ft-tag {
@@ -165,34 +167,30 @@
 
 .ft-chips li {
   padding: 9px 18px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: 1px solid var(--ft-line);
   background: var(--ft-card);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   color: var(--ft-accent-soft);
   transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.25s;
 }
 
-.ft-chips li:hover {
-  background: rgba(109, 101, 238, 0.2);
-  border-color: var(--ft-accent-2);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
 /* ---------- Column headings ---------- */
+/* heading colour is set explicitly: global headings are navy */
 .ft-col h4 {
   display: inline-block;
   margin: 0 0 26px;
   padding-bottom: 10px;
-  border-bottom: 2px solid var(--ft-accent-2);
+  border-bottom: 2px solid var(--cyan);
+  font-family: var(--ft-font);
   font-size: 18px;
   line-height: 26px;
-  font-weight: 600;
-  color: #fff;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0;
+  color: var(--white);
 }
 
 /* ---------- Quick links (two columns) ---------- */
@@ -211,7 +209,7 @@
   gap: 10px;
   font-size: 14px;
   line-height: 20px;
-  font-weight: 400;
+  font-weight: var(--fw-regular);
   color: var(--ft-muted);
   transition: color 0.2s, gap 0.2s;
 }
@@ -221,20 +219,10 @@
   flex: none;
   width: 14px;
   height: 14px;
-  background: var(--ft-accent-2);
+  background: var(--cyan);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 18 6-6-6-6'/%3E%3C/svg%3E") center / contain no-repeat;
   transition: background 0.2s;
-}
-
-/* bullet moves closer to the text and changes colour on hover */
-.ft-links a:hover {
-  color: #fff;
-  gap: 4px;
-}
-
-.ft-links a:hover::before {
-  background: var(--ft-accent-soft);
 }
 
 /* ---------- Contact + Social ---------- */
@@ -258,7 +246,7 @@
   min-width: 0;
   font-size: 14px;
   line-height: 20px;
-  font-weight: 400;
+  font-weight: var(--fw-regular);
   color: var(--ft-muted);
 }
 
@@ -268,11 +256,6 @@
   min-width: 0;
   overflow-wrap: anywhere;
   transition: color 0.2s;
-}
-
-.ft-contact li > a:hover,
-.ft-social a:hover {
-  color: #fff;
 }
 
 .ft-ico {
@@ -286,22 +269,14 @@
   background: var(--ft-card);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  color: var(--ft-accent-soft);
+  color: var(--cyan);
   transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
 .ft-ico svg {
+  display: block;
   width: 22px;
   height: 22px;
-}
-
-.ft-contact li:hover .ft-ico,
-.ft-social a:hover .ft-ico {
-  background: var(--ft-accent);
-  border-color: var(--ft-accent);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.45);
 }
 
 /* ---------- Bottom bar ---------- */
@@ -314,7 +289,7 @@
   padding: 22px 0 0;
   border-top: 1px solid var(--ft-line);
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ft-muted);
 }
 
 .ft-bar p {
@@ -335,12 +310,45 @@
   transition: transform 0.2s;
 }
 
-.ft-top:hover {
-  color: #fff;
-}
+/* ---------- Hover (only where hover really exists, so nothing sticks after a tap) ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .ft-chips li:hover {
+    background: rgba(22, 183, 200, 0.16);
+    border-color: var(--cyan);
+    color: var(--white);
+    transform: translateY(-2px);
+  }
 
-.ft-top:hover svg {
-  transform: translateY(-3px);
+  /* bullet moves closer to the text and changes colour */
+  .ft-links a:hover {
+    color: var(--white);
+    gap: 4px;
+  }
+  .ft-links a:hover::before {
+    background: var(--white);
+  }
+
+  .ft-contact li > a:hover,
+  .ft-social a:hover {
+    color: var(--color-link-on-dark);
+  }
+
+  /* icon tile: cyan with a navy icon */
+  .ft-contact li:hover .ft-ico,
+  .ft-social a:hover .ft-ico {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--navy);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-cta);
+  }
+
+  .ft-top:hover {
+    color: var(--color-link-on-dark);
+  }
+  .ft-top:hover svg {
+    transform: translateY(-3px);
+  }
 }
 
 /* ---------- Responsive ---------- */
@@ -387,60 +395,9 @@
   }
 }
 
-/* ==========================================================
-   Isolation layer — keeps old/global Home.css rules (svg, a, li, ::before)
-   from leaking into the footer. Safe to keep even after Home.css is cleaned.
-   ========================================================== */
-.ft .ft-ico {
-  width: 48px;
-  height: 48px;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  flex: none;
-}
-
-.ft .ft-ico svg {
-  display: block;
-  position: static;
-  width: 22px;
-  height: 22px;
-  min-width: 22px;
-  margin: 0;
-  padding: 0;            /* a padded svg squeezes the drawing to nothing */
-  border: 0;
-  border-radius: 0;
-  background: none;
-  box-shadow: none;
-  opacity: 1;
-  transform: none;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.9;
-}
-
-.ft .ft-links li::before,
-.ft .ft-links li::after,
-.ft .ft-links a::after {
-  content: none;
-  display: none;
-}
-
-.ft .ft-links a::before {
-  content: '';
-  display: block;
-  position: static;
-  flex: none;
-  width: 14px;
-  height: 14px;
-  min-width: 14px;
-  border: 0;
-  border-radius: 0;
-  opacity: 1;
-  transform: none;
-  background: var(--ft-accent-2);
-}
-
-.ft .ft-links a:hover::before {
-  background: var(--ft-accent-soft);
+@media (forced-colors: active) {
+  .ft-chips li,
+  .ft-ico {
+    border: 1px solid CanvasText;
+  }
 }

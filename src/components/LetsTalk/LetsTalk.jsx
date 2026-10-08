@@ -1,3 +1,4 @@
+
 import "./LetsTalk.css";
 
 /* ---------- Icons (inline SVG, no extra library needed) ---------- */
@@ -106,7 +107,10 @@ const OPTIONS = [
   },
 ];
 
-/* contactHref should point at your contact form (the #contact-us section on the page) */
+/* WhatsApp number for project enquiries */
+const WHATSAPP_URL = "https://wa.me/919619272938";
+
+/* contactHref should point at your contact form */
 const LetsTalk = ({ contactHref = "#contact-us" }) => {
   return (
     <section className="lt" id="lets-talk" aria-labelledby="lt-title">
@@ -115,7 +119,11 @@ const LetsTalk = ({ contactHref = "#contact-us" }) => {
           <h2 id="lt-title" className="lt__title">
             Let&rsquo;s Talk About Your Business
           </h2>
-          <p className="lt__q">Have an Idea? A Problem? A Business to Grow?</p>
+
+          <p className="lt__q">
+            Have an Idea? A Problem? A Business to Grow?
+          </p>
+
           <p className="lt__intro">
             You don&rsquo;t need to know exactly what service you need.
             <br />
@@ -129,12 +137,19 @@ const LetsTalk = ({ contactHref = "#contact-us" }) => {
           {OPTIONS.map((o) => (
             <li className="lt__item" key={o.id}>
               <a className="lt-opt" href={contactHref}>
-                <span className="lt-opt__icon">{ICONS[o.id]}</span>
+                <span className="lt-opt__icon">
+                  {ICONS[o.id]}
+                </span>
+
                 <span className="lt-opt__text">
                   <small>{o.question}</small>
                   <b>{o.answer}</b>
                 </span>
-                <span className="lt-opt__go" aria-hidden="true">
+
+                <span
+                  className="lt-opt__go"
+                  aria-hidden="true"
+                >
                   <Arrow />
                 </span>
               </a>
@@ -143,12 +158,24 @@ const LetsTalk = ({ contactHref = "#contact-us" }) => {
         </ul>
 
         <div className="lt__cta">
-          <span className="lt__start">Start with a conversation.</span>
-          <a className="lt__btn lt__btn--white" href={contactHref}>
+          <span className="lt__start">
+            Start with a conversation.
+          </span>
+
+          {/* Tell Us About Your Project → WhatsApp */}
+          <a
+            className="lt__btn lt__btn--primary"
+            href={WHATSAPP_URL}
+          >
             Tell Us About Your Project
             <Arrow />
           </a>
-          <a className="lt__btn lt__btn--ghost" href={contactHref}>
+
+          {/* Request a Consultation → Contact section */}
+          <a
+            className="lt__btn lt__btn--ghost"
+            href={contactHref}
+          >
             Request a Consultation
           </a>
         </div>
@@ -158,3 +185,4 @@ const LetsTalk = ({ contactHref = "#contact-us" }) => {
 };
 
 export default LetsTalk;
+

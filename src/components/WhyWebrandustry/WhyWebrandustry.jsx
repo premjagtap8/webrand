@@ -1,15 +1,32 @@
+
 import { useLayoutEffect, useRef } from 'react';
 import './WhyWebrandustry.css';
 
 /* Shared SVG wrapper so every icon gets the same stroke settings */
 const Svg = ({ children }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     {children}
   </svg>
 );
 
 const Arrow = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <path d="M5 12h14M13 6l6 6-6 6" />
   </svg>
 );
@@ -90,8 +107,11 @@ const POINTS = [
 ];
 
 export default function WhyWebrandustry({
-  primaryHref = '#contact-us',   // the "Contact" section in Home.jsx
-  secondaryHref = '#lets-talk',  // the "Request a Consultation" section in Home.jsx
+  // Tell Us About Your Project → WhatsApp
+  primaryHref = 'https://wa.me/919619272938',
+
+  // Request a Consultation → existing section
+  secondaryHref = '#lets-talk',
 }) {
   const rootRef = useRef(null);
 
@@ -99,60 +119,134 @@ export default function WhyWebrandustry({
      Elements are hidden with .wy-pre only once JS is running, and cleaned up on unmount. */
   useLayoutEffect(() => {
     const root = rootRef.current;
-    if (!root) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const items = [...root.querySelectorAll('[data-reveal]')];
-    items.forEach((el) => el.classList.add('wy-pre'));
+    if (!root) return;
+
+    if (
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
+
+    const items = [
+      ...root.querySelectorAll('[data-reveal]'),
+    ];
+
+    items.forEach((el) => {
+      el.classList.add('wy-pre');
+    });
 
     const io = new IntersectionObserver(
       (entries) =>
         entries.forEach((e) => {
           if (!e.isIntersecting) return;
+
           e.target.classList.remove('wy-pre');
           e.target.classList.add('wy-in');
+
           io.unobserve(e.target);
         }),
       { threshold: 0.12 }
     );
+
     items.forEach((el) => io.observe(el));
 
     return () => {
       io.disconnect();
-      items.forEach((el) => el.classList.remove('wy-pre', 'wy-in'));
+
+      items.forEach((el) =>
+        el.classList.remove('wy-pre', 'wy-in')
+      );
     };
   }, []);
 
   return (
-    <section className="wy" id="why" aria-labelledby="wy-title" ref={rootRef}>
+    <section
+      className="wy"
+      id="why"
+      aria-labelledby="wy-title"
+      ref={rootRef}
+    >
       <div className="wy__inner">
         <header className="wy__head">
-          <span className="wy__pill" data-reveal>Why Webrandustry</span>
-          <h2 id="wy-title" className="wy__title" data-reveal style={{ '--d': '.06s' }}>
-            More Than a Vendor. <span className="wy__accent">A Business Partner.</span>
+          <span className="wy__pill" data-reveal>
+            Why Webrandustry
+          </span>
+
+          <h2
+            id="wy-title"
+            className="wy__title"
+            data-reveal
+            style={{ '--d': '.06s' }}
+          >
+            More Than a Vendor.{' '}
+            <span className="wy__accent">
+              A Business Partner.
+            </span>
           </h2>
-          <p className="wy__lead" data-reveal style={{ '--d': '.12s' }}>
-            We begin with your business objective, then bring creative thinking and technical capability together under one roof.
+
+          <p
+            className="wy__lead"
+            data-reveal
+            style={{ '--d': '.12s' }}
+          >
+            We begin with your business objective, then bring
+            creative thinking and technical capability together
+            under one roof.
           </p>
         </header>
 
         <ul className="wy__grid">
           {POINTS.map((p, i) => (
-            <li className="wy-card" key={p.n} data-reveal style={{ '--d': `${0.08 + i * 0.06}s` }}>
-              <span className="wy-card__n" aria-hidden="true">{p.n}</span>
-              <span className="wy-card__ic">{p.icon}</span>
-              <h3 className="wy-card__title">{p.title}</h3>
-              <p className="wy-card__text">{p.text}</p>
+            <li
+              className="wy-card"
+              key={p.n}
+              data-reveal
+              style={{
+                '--d': `${0.08 + i * 0.06}s`,
+              }}
+            >
+              <span
+                className="wy-card__n"
+                aria-hidden="true"
+              >
+                {p.n}
+              </span>
+
+              <span className="wy-card__ic">
+                {p.icon}
+              </span>
+
+              <h3 className="wy-card__title">
+                {p.title}
+              </h3>
+
+              <p className="wy-card__text">
+                {p.text}
+              </p>
             </li>
           ))}
         </ul>
 
-        <div className="wy__btns" data-reveal style={{ '--d': '.2s' }}>
-          <a className="wy-btn wy-btn--primary" href={primaryHref}>
+        <div
+          className="wy__btns"
+          data-reveal
+          style={{ '--d': '.2s' }}
+        >
+          {/* Tell Us About Your Project → WhatsApp */}
+          <a
+            className="wy-btn wy-btn--primary"
+            href={primaryHref}
+          >
             Tell Us About Your Project
             <Arrow />
           </a>
-          <a className="wy-btn wy-btn--line" href={secondaryHref}>
+
+          {/* Request a Consultation → existing section */}
+          <a
+            className="wy-btn wy-btn--line"
+            href={secondaryHref}
+          >
             Request a Consultation
           </a>
         </div>
@@ -160,3 +254,4 @@ export default function WhyWebrandustry({
     </section>
   );
 }
+
