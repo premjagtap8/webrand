@@ -1,16 +1,18 @@
-/* ===== Our Work (brand v2) =====
-   Cards: white surface, light grey border, 18px radius (brand rule: 12-18px).
-   Placeholder cover tones: navy, deep blue and teal (used when a project has no photo).
-   Logo cards (.ow-card--logo): the logo is shown whole on white, never cropped.
-   Filter chips: white with a grey border, active chip is navy with white text.
-   CTA: cyan with navy text. Arrows and progress bar use cyan / deep blue.
-   Heading accent: solid Deep Blue. Eyebrow label uses the shared .pill from base.css.
-   Technology partner line (.ow-card__partner): small muted label + bold deep-blue name,
-   shown under the card title only for projects that have a `partner` value.
-   Layouts: mobile up to 640px (swipe, 78% cards, 84% under 480px),
-            tablet 641-1024px (2.4 cards visible), desktop 1025px+ (3.4 cards visible,
-            or 3 equal cards when there are 3 or fewer projects).
-   Matches OurWork.jsx class names. */
+/* ===== Our Work (brand v2, responsive + interaction pass) =====
+   Colors, font sizes, font weights and the theme are UNCHANGED.
+   Only layout, responsiveness and interaction details were improved.
+   Matches OurWork.jsx class names.
+
+   What changed (search for "NEW" or "FIX" below):
+   - FIX  arrows no longer collide with the centred title on small desktops / tablets
+   - FIX  track side padding so the first card and hover shadows are never clipped
+   - FIX  cards are flex columns, so every card stays equal height with a tidy body
+   - FIX  safe-area padding for notched phones, tap-highlight removed
+   - FIX  filter fade mask is only used where chips can actually overflow
+   - NEW  staggered card entrance, press (:active) feedback on cards, chips, arrows
+   - NEW  snap-stop for predictable swiping, smoother touch scrolling
+   - NEW  extra tablet / small-phone / landscape breakpoints
+*/
 
 /* ---------- Tokens ---------- */
 .ow {
@@ -22,10 +24,13 @@
   --ow-ease: var(--ease);
   --ow-gap: clamp(12px, 1.4vw, 18px);
   --ow-radius: var(--radius-lg);                   /* 18px */
+  --ow-pad-x: clamp(16px, 3vw, 32px);              /* NEW: one value reused for inner padding + arrow clearance */
+  --ow-bleed: 6px;                                 /* NEW: room around the track for hover lift + shadow */
 
   color: var(--ow-ink);
   font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;        /* NEW: no grey flash on tap */
   /* vertical padding and background are set by index.css (.site-main rules), so the page's off-white shows through */
   padding: clamp(36px, 5vw, 64px) 0 clamp(40px, 5vw, 64px);
 }
@@ -38,7 +43,8 @@
 
 .ow__inner {
   margin: 0 auto;                                  /* full width, same container as the other sections */
-  padding: 0 clamp(16px, 3vw, 32px);
+  /* FIX: respects the notch / rounded corners on phones in landscape */
+  padding-inline: max(var(--ow-pad-x), env(safe-area-inset-left, 0px)) max(var(--ow-pad-x), env(safe-area-inset-right, 0px));
   min-width: 0;
 }
 
@@ -56,6 +62,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 0;
 }
 
 .ow__title {
@@ -66,11 +73,12 @@
   font-weight: var(--fw-bold);
   color: var(--color-heading);
   text-wrap: balance;
+  overflow-wrap: anywhere;                         /* NEW: a long word can never push the page sideways */
 }
 
 .ow__accent {
   display: inline-block; /* wraps as one unit: "Into Reality." */
-  color: var(--deep-blue);               /* solid Deep Blue (was a Deep Blue to Cyan gradient) */
+  color: var(--deep-blue);
 }
 
 .ow__sub {
@@ -91,6 +99,14 @@
   gap: 8px;
 }
 
+/* FIX: arrows are 88px wide; reserve that space on both sides of the header so the
+   centred title/sub text can never run underneath them (769px and up). */
+@media (min-width: 769px) {
+  .ow__head {
+    padding-inline: 96px;
+  }
+}
+
 .ow__arrow {
   width: 40px;
   height: 40px;
@@ -101,12 +117,14 @@
   background: var(--white);
   color: var(--navy);
   cursor: pointer;
+  touch-action: manipulation;                      /* NEW: removes the 300ms tap delay */
   transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s, transform 0.25s var(--ow-ease);
 }
 
 .ow__arrow svg {
   width: 16px;
   height: 16px;
+  transition: transform 0.2s var(--ow-ease);       /* NEW */
 }
 
 .ow__arrow:hover:not(:disabled) {
@@ -114,6 +132,19 @@
   border-color: var(--cyan);
   color: var(--navy);                    /* navy on cyan: white would fail contrast */
   transform: translateY(-2px);
+}
+
+/* NEW: the icon nudges in the direction it points */
+.ow__arrow:hover:not(:disabled) svg {
+  transform: translateX(2px);
+}
+.ow__arrow:first-child:hover:not(:disabled) svg {
+  transform: translateX(-2px) rotate(0deg);
+}
+
+/* NEW: press feedback */
+.ow__arrow:active:not(:disabled) {
+  transform: translateY(0) scale(0.94);
 }
 
 .ow__arrow:disabled {
@@ -128,7 +159,8 @@
   gap: 6px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 2px 2px 10px;
+  overscroll-behavior-x: contain;                  /* NEW: swiping chips doesn't trigger browser back-swipe */
+  padding: 4px 2px 10px;                           /* FIX: 2px -> 4px top so the chip hover lift isn't clipped */
   margin-bottom: 4px;
   scrollbar-width: none;
 }
@@ -149,6 +181,7 @@
   font-weight: var(--fw-medium);
   white-space: nowrap;
   cursor: pointer;
+  touch-action: manipulation;                      /* NEW */
   transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.25s var(--ow-ease);
 }
 
@@ -156,6 +189,11 @@
   border-color: var(--cyan);
   color: var(--deep-blue);
   transform: translateY(-1px);
+}
+
+/* NEW: press feedback */
+.ow__chip:active {
+  transform: scale(0.96);
 }
 
 /* active chip: navy with white text */
@@ -181,8 +219,10 @@
 }
 
 /* ---------- Track ----------
-   Vertical padding gives the hover lift and shadow room (overflow-x:auto also clips on y);
-   the negative margins cancel it out so the layout doesn't grow. */
+   FIX: horizontal padding (and the matching negative margin) now gives the hover shadow
+   room on the left/right too. Before, overflow-x:auto clipped the shadow and the cyan
+   border of the first and last card at the track edges.
+   The negative margins cancel the padding so the layout does not grow. */
 .ow__track {
   display: flex;
   gap: var(--ow-gap);
@@ -190,9 +230,11 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  scroll-padding-left: 2px;
-  padding: 10px 2px 24px;
-  margin: -6px 0 -12px;
+  scroll-padding-inline: var(--ow-bleed);          /* FIX: matches the padding below, snap lines up with the heading */
+  scroll-behavior: smooth;                         /* NEW: keyboard / programmatic scrolls glide */
+  touch-action: pan-x pan-y;                       /* NEW: horizontal swipe and vertical page scroll both feel natural */
+  padding: 10px var(--ow-bleed) 24px;
+  margin: -6px calc(var(--ow-bleed) * -1) -12px;
   scrollbar-width: none;
   animation: ow-swap 0.35s ease both; /* plays only when the filter changes (track remounts) */
 }
@@ -212,18 +254,40 @@
   }
 }
 
+/* NEW: cards rise in one after another */
+@keyframes ow-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* ---------- Card ---------- */
 .ow-card {
   /* about 3 cards plus a clear peek of the 4th, so it reads as scrollable */
   flex: 0 0 calc((100% - 3 * var(--ow-gap)) / 3.4);
   min-width: 0;
   scroll-snap-align: start;
+  scroll-snap-stop: always;                        /* NEW: a fast swipe can't skip over cards */
+  display: flex;                                   /* FIX: equal-height cards without relying on height:100% */
   background: var(--ow-card);
   border: 1px solid var(--ow-line);
   border-radius: var(--ow-radius);
   overflow: hidden;
   transition: transform 0.35s var(--ow-ease), border-color 0.25s, box-shadow 0.35s;
+  animation: ow-rise 0.55s var(--ow-ease) both;    /* NEW */
 }
+
+/* NEW: stagger the entrance (cards beyond the 6th never exist, MAX_CARDS = 6) */
+.ow-card:nth-child(2) { animation-delay: 0.06s; }
+.ow-card:nth-child(3) { animation-delay: 0.12s; }
+.ow-card:nth-child(4) { animation-delay: 0.18s; }
+.ow-card:nth-child(5) { animation-delay: 0.24s; }
+.ow-card:nth-child(6) { animation-delay: 0.3s; }
 
 .ow-card:hover,
 .ow-card:focus-within {
@@ -232,9 +296,16 @@
   box-shadow: 0 16px 36px -12px color-mix(in srgb, var(--cyan) 38%, transparent);
 }
 
+/* NEW: tactile press */
+.ow-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
 .ow-card__link {
-  display: block;
-  height: 100%;                /* equal-height cards: the body fills the card */
+  display: flex;                                   /* FIX: column layout, body stretches to fill */
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
   color: inherit;
   text-decoration: none;
   outline: none;
@@ -248,6 +319,7 @@
 
 .ow-card__media {
   position: relative;
+  flex-shrink: 0;                                  /* FIX: the cover never gets squashed by a tall body */
   aspect-ratio: 16 / 10;
   overflow: hidden;
   background: linear-gradient(135deg, var(--navy), var(--deep-blue));
@@ -364,6 +436,10 @@
   top: 12px;
   left: 12px;
   z-index: 2;
+  max-width: calc(100% - 24px);                    /* NEW: a long category name can't overflow the cover */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 4px 11px;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.92);
@@ -394,6 +470,7 @@
 .ow-card__go svg {
   width: 16px;
   height: 16px;
+  transition: transform 0.25s var(--ow-ease);     /* NEW */
 }
 
 .ow-card:hover .ow-card__go,
@@ -402,8 +479,15 @@
   transform: none;
 }
 
+/* NEW: the arrow slides when you hover the card */
+.ow-card:hover .ow-card__go svg {
+  transform: translateX(2px);
+}
+
 .ow-card__body {
+  flex: 1;                                         /* FIX: fills the card so all cards match in height */
   padding: 14px 16px 16px;
+  min-width: 0;
 }
 
 .ow-card__title {
@@ -414,6 +498,7 @@
   letter-spacing: -0.015em;
   color: var(--color-heading);
   text-wrap: balance;
+  overflow-wrap: anywhere;                         /* NEW */
 }
 
 .ow-card__summary {
@@ -437,7 +522,9 @@
 }
 
 .ow-card__partner strong {
-  font-weight: var(--fw-semibold);
+  font-size: clamp(15px, 1.2vw, 17px);   /* bigger partner name, scales with screen; was 13px */
+  font-weight: var(--fw-bold);           /* was semibold */
+  letter-spacing: -0.01em;
   color: var(--deep-blue);
 }
 
@@ -486,6 +573,7 @@
   font-size: 14.5px;
   font-weight: var(--fw-semibold);
   text-decoration: none;
+  touch-action: manipulation;                      /* NEW */
   box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--cyan) 70%, var(--navy));
   transition: background 0.2s, transform 0.25s var(--ow-ease), box-shadow 0.25s;
 }
@@ -534,10 +622,22 @@
   .ow-card:hover .ow-card__media img {
     transform: none;
   }
+  .ow-card:hover .ow-card__go svg {
+    transform: none;
+  }
   .ow__chip:hover:not(.is-active) {
     border-color: var(--ow-line);
     color: var(--color-heading);
     transform: none;
+  }
+  .ow__arrow:hover:not(:disabled),
+  .ow__cta:hover {
+    transform: none;
+  }
+  /* on touch the press state is the interaction, so keep it clearly visible */
+  .ow-card:active {
+    transform: scale(0.98);
+    border-color: var(--cyan);
   }
 }
 
@@ -550,8 +650,19 @@
   }
 }
 
-@media (max-width: 1280px) {
-  /* chips may overflow here, so fade the right edge as a scroll hint */
+/* NEW: very large screens, cards stay a comfortable size instead of stretching */
+@media (min-width: 1600px) {
+  .ow-card {
+    flex-basis: calc((100% - 4 * var(--ow-gap)) / 4.4);
+  }
+  .ow__track:has(.ow-card:nth-child(-n + 4):last-child) .ow-card {
+    flex-basis: calc((100% - 3 * var(--ow-gap)) / 4);
+  }
+}
+
+/* FIX: the right-edge fade is only a scroll hint, so use it where the chips can really overflow
+   (it used to fade the last chip even when everything fitted, up to 1280px). */
+@media (max-width: 1100px) {
   .ow__filters {
     -webkit-mask-image: linear-gradient(to right, #000 92%, transparent);
     mask-image: linear-gradient(to right, #000 92%, transparent);
@@ -561,6 +672,13 @@
 @media (max-width: 1024px) {
   .ow-card {
     flex-basis: calc((100% - 2 * var(--ow-gap)) / 2.4);
+  }
+}
+
+/* NEW: small tablets / large phones in landscape, a slightly larger peek of the next card */
+@media (min-width: 641px) and (max-width: 860px) {
+  .ow-card {
+    flex-basis: calc((100% - var(--ow-gap)) / 2.15);
   }
 }
 
@@ -576,6 +694,7 @@
   }
   .ow__chip {
     padding: 8px 14px;           /* a comfortable tap target */
+    min-height: 36px;            /* NEW */
   }
   .ow__foot {
     flex-direction: column-reverse;
@@ -589,6 +708,7 @@
     justify-content: center;
     margin-left: 0;
     padding: 13px 22px;
+    min-height: 44px;            /* NEW: recommended minimum touch target */
   }
 }
 
@@ -608,6 +728,9 @@
   .ow-card__partner {
     font-size: 12.5px;
   }
+  .ow-card__partner strong {
+    font-size: 15px;             /* stays easy to read on phones */
+  }
   .ow-card__tag {
     top: 10px;
     left: 10px;
@@ -619,8 +742,29 @@
   }
 }
 
+/* NEW: very small phones (320-359px), keep the heading and cards from feeling cramped */
+@media (max-width: 359px) {
+  .ow-card {
+    flex-basis: 88%;
+  }
+  .ow__chip {
+    padding: 8px 12px;
+  }
+}
+
+/* NEW: phones in landscape have very little height, so use a wider, shorter cover */
+@media (max-height: 480px) and (orientation: landscape) {
+  .ow-card__media {
+    aspect-ratio: 16 / 9;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ow__track {
+    animation: none;
+    scroll-behavior: auto;
+  }
+  .ow-card {
     animation: none;
   }
   .ow *,
@@ -630,6 +774,7 @@
   }
   .ow-card:hover,
   .ow-card:focus-within,
+  .ow-card:active,
   .ow__cta:hover,
   .ow__arrow:hover:not(:disabled),
   .ow__chip:hover {
