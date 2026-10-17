@@ -1,9 +1,12 @@
 /* ===== Our Work (brand v2) =====
-   Cards: white surface, light grey border, 18px radius.
+   Cards: white surface, light grey border, 18px radius (brand rule: 12-18px).
    Placeholder cover tones: navy, deep blue and teal (used when a project has no photo).
    Logo cards (.ow-card--logo): the logo is shown whole on white, never cropped.
    Filter chips: white with a grey border, active chip is navy with white text.
    CTA: cyan with navy text. Arrows and progress bar use cyan / deep blue.
+   Heading accent: solid Deep Blue. Eyebrow label uses the shared .pill from base.css.
+   Technology partner line (.ow-card__partner): small muted label + bold deep-blue name,
+   shown under the card title only for projects that have a `partner` value.
    Layouts: mobile up to 640px (swipe, 78% cards, 84% under 480px),
             tablet 641-1024px (2.4 cards visible), desktop 1025px+ (3.4 cards visible,
             or 3 equal cards when there are 3 or fewer projects).
@@ -18,7 +21,7 @@
   --ow-line: var(--light-grey);
   --ow-ease: var(--ease);
   --ow-gap: clamp(12px, 1.4vw, 18px);
-  --ow-radius: 18px;
+  --ow-radius: var(--radius-lg);                   /* 18px */
 
   color: var(--ow-ink);
   font-family: var(--font-primary);
@@ -55,45 +58,19 @@
   align-items: center;
 }
 
-.ow__pill {
-  display: inline-block;
-  padding: 6px 14px;
-  border: 1px solid var(--cyan-border);
-  border-radius: 999px;
-  background: var(--white);
-  color: var(--deep-blue);
-  font-size: 11.5px;
-  font-weight: var(--fw-semibold);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .ow__title {
   margin: 12px 0 0;
   font-size: clamp(28px, 3.6vw, 40px);
   line-height: 1.1;
   letter-spacing: -0.03em;
   font-weight: var(--fw-bold);
-  color: var(--navy);
+  color: var(--color-heading);
   text-wrap: balance;
-}
-
-/* The <br/> in the markup forced two lines; hide it so the title sits on one line
-   when there is room (it still wraps, balanced, on narrow screens). */
-.ow__title br {
-  display: none;
 }
 
 .ow__accent {
   display: inline-block; /* wraps as one unit: "Into Reality." */
-  margin-left: 0.25em;
-  background: linear-gradient(90deg, var(--deep-blue), var(--cyan));   /* accent words: deep blue to cyan */
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  padding-bottom: 0.16em;                /* keeps the descender in "Reality" (y) from being clipped */
-  margin-bottom: -0.16em;
+  color: var(--deep-blue);               /* solid Deep Blue (was a Deep Blue to Cyan gradient) */
 }
 
 .ow__sub {
@@ -164,9 +141,9 @@
   flex-shrink: 0;
   padding: 7px 14px;
   border: 1px solid var(--ow-line);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--white);
-  color: var(--navy);
+  color: var(--color-heading);
   font: inherit;
   font-size: 13px;
   font-weight: var(--fw-medium);
@@ -257,6 +234,7 @@
 
 .ow-card__link {
   display: block;
+  height: 100%;                /* equal-height cards: the body fills the card */
   color: inherit;
   text-decoration: none;
   outline: none;
@@ -387,7 +365,7 @@
   left: 12px;
   z-index: 2;
   padding: 4px 11px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.92);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
@@ -434,7 +412,7 @@
   line-height: 1.3;
   font-weight: var(--fw-bold);
   letter-spacing: -0.015em;
-  color: var(--navy);
+  color: var(--color-heading);
   text-wrap: balance;
 }
 
@@ -444,6 +422,23 @@
   font-size: 14px;
   line-height: 1.45;
   text-wrap: pretty;
+}
+
+/* ---------- Technology partner line ---------- */
+.ow-card__partner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 5px;
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ow-muted);
+}
+
+.ow-card__partner strong {
+  font-weight: var(--fw-semibold);
+  color: var(--deep-blue);
 }
 
 /* ---------- Footer ---------- */
@@ -485,7 +480,7 @@
   gap: 10px;
   margin-left: auto;
   padding: 11px 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--color-primary);
   color: var(--color-on-primary);
   font-size: 14.5px;
@@ -541,7 +536,7 @@
   }
   .ow__chip:hover:not(.is-active) {
     border-color: var(--ow-line);
-    color: var(--navy);
+    color: var(--color-heading);
     transform: none;
   }
 }
@@ -609,6 +604,9 @@
   }
   .ow-card__title {
     font-size: 15.5px;
+  }
+  .ow-card__partner {
+    font-size: 12.5px;
   }
   .ow-card__tag {
     top: 10px;

@@ -1,8 +1,10 @@
-
-
 // src/api/enquiry.js
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL;
+
+if (!API_URL) {
+  console.error("VITE_API_URL is not set. Add it to your .env files and rebuild.");
+}
 
 export async function sendEnquiry(values) {
   const res = await fetch(`${API_URL}/api/enquiry`, {

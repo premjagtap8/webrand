@@ -5,9 +5,28 @@ import pawpaaLogo from "../../assets/images/pawpaa-logo.png.jpeg";
 import lifecareLogo from "../../assets/images/lifecare-logo.png.jpeg";
 import autocalLogo from "../../assets/images/autocal-logo.png.jpeg";
 
-/* Categories come straight from the website copy (docx). */
-const CATEGORIES = [
-  "All",
+/*
+  CLIENT WORK
+  - `featured: true` -> shown under "All" (keep this to 6 or fewer)
+  - `logo: true`     -> the image is a logo, so the card shows it whole on white (no cropping)
+  - `partner`        -> optional. When set, the card shows a "Technology Partner: <name>" line
+                        under the title. Leave it out and the card shows nothing extra.
+  - `category`       -> "Client Work" for now. The tag on the card is hidden while it says
+                        "Client Work". When your lead confirms what was done for each client,
+                        change it to a real category from CATEGORY_ORDER (e.g. "Branding") and
+                        the tag and its filter tab will appear automatically.
+  - `summary`        -> leave "" until the real description is confirmed; the card hides it.
+  - `href`           -> where the card goes. "#our-work" keeps the visitor on the page until
+                        case-study pages exist; replace it with the real page or client site later.
+*/
+const PROJECTS = [
+  { id: 1, title: "Pawpaa", summary: "", partner: "Kloud Innovisionz", category: "Client Work", featured: true, logo: true, image: pawpaaLogo, href: "#our-work" },
+  { id: 2, title: "Life Care Charitable Trust", summary: "", partner: "Kloud Innovisionz", category: "Client Work", featured: true, logo: true, image: lifecareLogo, href: "#our-work" },
+  { id: 3, title: "Autocal", summary: "", category: "Client Work", featured: true, logo: true, image: autocalLogo, href: "#our-work" },
+];
+
+/* Category names come straight from the website copy (docx). */
+const CATEGORY_ORDER = [
   "Branding",
   "Graphic Design",
   "Packaging",
@@ -20,22 +39,9 @@ const CATEGORIES = [
   "3D Design & Printing",
 ];
 
-/*
-  CLIENT WORK
-  - `featured: true` -> shown under "All" (keep this to 6 or fewer)
-  - `logo: true`     -> the image is a logo, so the card shows it whole on white (no cropping)
-  - `category`       -> "Client Work" for now. The tag on the card is hidden while it says
-                        "Client Work", and these cards only appear under "All". When your lead
-                        confirms what was done for each client, change it to a real category
-                        (e.g. "Branding") and the tag and the filter tab will start working.
-  - `summary`        -> leave "" until the real description is confirmed; the card hides it.
-  - `href`           -> link to the case study / project page.
-*/
-const PROJECTS = [
-  { id: 1, title: "Pawpaa", summary: "", category: "Client Work", featured: true, logo: true, image: pawpaaLogo, href: "/our-work" },
-  { id: 2, title: "Life Care Charitable Trust", summary: "", category: "Client Work", featured: true, logo: true, image: lifecareLogo, href: "/our-work" },
-  { id: 3, title: "Autocal", summary: "", category: "Client Work", featured: true, logo: true, image: autocalLogo, href: "/our-work" },
-];
+/* Only categories that really have a project get a filter tab, so no tab ever opens an empty state.
+   While every project is still "Client Work", this is just ["All"] and the filter row is hidden. */
+const CATEGORIES = ["All", ...CATEGORY_ORDER.filter((c) => PROJECTS.some((p) => p.category === c))];
 
 const MAX_CARDS = 6;
 
@@ -56,12 +62,14 @@ const Arrow = ({ direction = "right" }) => (
   </svg>
 );
 
-const OurWork = ({ viewAllHref = "/our-work" }) => {
+const OurWork = ({ viewAllHref = "#contact-us" }) => {
   const [active, setActive] = useState("All");
   const [progress, setProgress] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
   const trackRef = useRef(null);
+
+  const showFilters = CATEGORIES.length > 1;
 
   const visible = (
     active === "All"
@@ -107,11 +115,9 @@ const OurWork = ({ viewAllHref = "/our-work" }) => {
         {/* Header + arrows */}
         <header className="ow__head">
           <div className="ow__titleWrap">
-            <span className="ow__pill">Our Work</span>
+            <span className="pill">Our Work</span>
             <h2 id="ow-heading" className="ow__title">
-              Ideas We&rsquo;ve Turned
-              <br />
-              <span className="ow__accent">Into Reality.</span>
+              Ideas We&rsquo;ve Turned <span className="ow__accent">Into Reality.</span>
             </h2>
             <p className="ow__sub">Explore selected projects across our capabilities.</p>
           </div>
@@ -138,20 +144,22 @@ const OurWork = ({ viewAllHref = "/our-work" }) => {
           </div>
         </header>
 
-        {/* Filters: one scrollable row, so they never add height */}
-        <div className="ow__filters" role="group" aria-label="Filter projects by category">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              className={`ow__chip ${active === cat ? "is-active" : ""}`}
-              aria-pressed={active === cat}
-              onClick={() => setActive(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        {/* Filters: one scrollable row, only shown once there is more than one real category */}
+        {showFilters && (
+          <div className="ow__filters" role="group" aria-label="Filter projects by category">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className={`ow__chip ${active === cat ? "is-active" : ""}`}
+                aria-pressed={active === cat}
+                onClick={() => setActive(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Cards */}
         {visible.length === 0 ? (
@@ -175,7 +183,10 @@ const OurWork = ({ viewAllHref = "/our-work" }) => {
                 <a
                   className="ow-card__link"
                   href={p.href}
-                  aria-label={p.category === "Client Work" ? p.title : `${p.title} - ${p.category}`}
+                  aria-label={
+                    (p.category === "Client Work" ? p.title : `${p.title} - ${p.category}`) +
+                    (p.partner ? `. Technology partner: ${p.partner}` : "")
+                  }
                 >
                   <div className="ow-card__media">
                     {p.image && (
@@ -199,6 +210,11 @@ const OurWork = ({ viewAllHref = "/our-work" }) => {
                   <div className="ow-card__body">
                     <h3 className="ow-card__title">{p.title}</h3>
                     {p.summary && <p className="ow-card__summary">{p.summary}</p>}
+                    {p.partner && (
+                      <p className="ow-card__partner">
+                        <span>Technology Partner:</span> <strong>{p.partner}</strong>
+                      </p>
+                    )}
                   </div>
                 </a>
               </article>

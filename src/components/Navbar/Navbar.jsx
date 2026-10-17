@@ -1,17 +1,12 @@
-
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import logo from '../../assets/images/WeBrandLogo.jpg';
 import './Navbar.css';
-
-const LINKS = [
-  { label: 'Home', href: '#top' },
-  { label: 'What We Do', href: '#what-we-do' },
-  { label: 'Industries', href: '#industries' },
-  { label: 'Our Work', href: '#our-work' },
-  { label: 'About Us', href: '#why' },
-  { label: 'Insights', href: '#insights' },
-  { label: 'Contact', href: '#contact-us' },
-];
+import {
+  SECTION_ROUTES,
+  SectionLink,
+  findSection,
+} from '../../utils/SectionNav.jsx';
 
 const ArrowIcon = () => (
   <svg className="ic" viewBox="0 0 24 24" aria-hidden="true">
@@ -21,13 +16,34 @@ const ArrowIcon = () => (
 );
 
 export default function Navbar() {
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [stuck, setStuck] = useState(false);
   const navRef = useRef(null);
+  const lockUntil = useRef(0);
+  const lockTimer = useRef(0);
 
   // WhatsApp number for Start a Project
   const projectWhatsApp = 'https://wa.me/919619272938';
+
+  // Marks a link active right away and pauses scroll-spy while the page scrolls there
+  const activate = useCallback((index) => {
+    setActive(index);
+    lockUntil.current = Date.now() + 1100;
+    clearTimeout(lockTimer.current);
+    lockTimer.current = setTimeout(
+      () => window.dispatchEvent(new Event('scroll')),
+      1150
+    );
+  }, []);
+
+  // The URL decides the active link (/insights -> Insights); on the 404 page none is active
+  useEffect(() => {
+    const route = findSection(pathname);
+    if (route) activate(SECTION_ROUTES.indexOf(route));
+    else setActive(-1);
+  }, [pathname, activate]);
 
   // Escape or a click outside the nav closes the mobile menu
   useEffect(() => {
@@ -54,21 +70,31 @@ export default function Navbar() {
 
   // Scroll-spy + shadow
   useEffect(() => {
-    const sections = LINKS.map((l) => document.querySelector(l.href));
     let ticking = false;
 
     const update = () => {
       ticking = false;
+      setStuck(window.scrollY > 12);
 
-      const line = 140;
+      // right after a click, trust the clicked link
+      if (Date.now() < lockUntil.current) return;
+
+      const els = SECTION_ROUTES.map((r) => document.getElementById(r.id));
+
+      // 404 page: no sections, so no active link
+      if (!els.some(Boolean)) {
+        setActive(-1);
+        return;
+      }
+
+      // a section counts once its top passes 45% of the screen (was a fixed 140px)
+      const line = Math.max(200, window.innerHeight * 0.45);
       let cur = 0;
       let best = -Infinity;
 
-      sections.forEach((s, i) => {
-        if (!s) return;
-
-        const top = s.getBoundingClientRect().top;
-
+      els.forEach((el, i) => {
+        if (!el) return;
+        const top = el.getBoundingClientRect().top;
         if (top <= line && top > best) {
           best = top;
           cur = i;
@@ -80,12 +106,9 @@ export default function Navbar() {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 4;
 
-      if (atBottom) {
-        cur = LINKS.length - 1;
-      }
+      if (atBottom) cur = SECTION_ROUTES.length - 1;
 
       setActive(cur);
-      setStuck(window.scrollY > 12);
     };
 
     const onScroll = () => {
@@ -103,6 +126,7 @@ export default function Navbar() {
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
+      clearTimeout(lockTimer.current);
     };
   }, []);
 
@@ -112,14 +136,14 @@ export default function Navbar() {
       className={`nav${stuck ? ' is-stuck' : ''}`}
       aria-label="Main"
     >
-      <a className="logo" href="#top" aria-label="Webrandustry home">
-        <img
-          src={logo}
-          alt="Webrandustry"
-          width="90"
-          height="76"
-        />
-      </a>
+      <SectionLink
+        className="logo"
+        to="/"
+        aria-label="Webrandustry home"
+        onClick={() => activate(0)}
+      >
+        <img src={logo} alt="Webrandustry" width="90" height="76" />
+      </SectionLink>
 
       <ul
         id="navMenu"
@@ -128,38 +152,28 @@ export default function Navbar() {
           if (e.target.closest('a')) setOpen(false);
         }}
       >
-        {LINKS.map((l, i) => (
-          <li
-            key={l.href}
-            className={i === active ? 'on' : ''}
-          >
-            <a
-              href={l.href}
-              aria-current={
-                i === active ? 'location' : undefined
-              }
+        {SECTION_ROUTES.map((l, i) => (
+          <li key={l.path} className={i === active ? 'on' : ''}>
+            <SectionLink
+              to={l.path}
+              aria-current={i === active ? 'location' : undefined}
+              onClick={() => activate(i)}
             >
               {l.label}
-            </a>
+            </SectionLink>
           </li>
         ))}
 
         {/* Mobile Start a Project */}
         <li className="nav-cta-m">
-          <a
-            className="btn primary"
-            href={projectWhatsApp}
-          >
+          <a className="btn primary" href={projectWhatsApp}>
             Start a Project
           </a>
         </li>
       </ul>
 
       {/* Desktop Start a Project */}
-      <a
-        className="btn primary nav-cta"
-        href={projectWhatsApp}
-      >
+      <a className="btn primary nav-cta" href={projectWhatsApp}>
         Start a Project <ArrowIcon />
       </a>
 

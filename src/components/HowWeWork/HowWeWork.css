@@ -1,5 +1,5 @@
 /* ===== How We Work (brand v1) =====
-   Cards: white surface, light grey border, rounded corners (22px, same as before).
+   Cards: white surface, light grey border, 18px radius (brand rule: 12-18px).
    Number badges + connector lines: cyan (badge is cyan tint with a deep blue number, cyan with a navy number on hover).
    CTA button: cyan with navy text. Final step card: navy with a cyan glow and white text.
    Layouts: mobile up to 640px (1 column), tablet 641-1000px (2 columns), desktop 1001px+ (3 x 2).
@@ -15,7 +15,7 @@
   --hw-line: var(--light-grey);
   --hw-gap: clamp(14px, 1.6vw, 20px);
   --hw-pad: clamp(20px, 2vw, 28px);
-  --hw-radius: 22px;
+  --hw-radius: var(--radius-lg);                   /* 18px: was 22px, outside the brand's 12-18px card range */
 
   color: var(--hw-ink);
   font-family: var(--font-primary);
@@ -56,7 +56,7 @@
   display: inline-block;
   padding: 6px 14px;
   border: 1px solid var(--cyan-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--white);
   color: var(--deep-blue);
   font-size: 11px;
@@ -71,7 +71,7 @@
   line-height: 1.1;
   letter-spacing: -0.03em;
   font-weight: var(--fw-bold);
-  color: var(--navy);
+  color: var(--color-heading);
   text-wrap: balance;
 }
 
@@ -84,13 +84,7 @@
 .hw__accent {
   display: inline-block;                 /* wraps as one unit: "to Execution." */
   margin-left: 0.25em;
-  background: linear-gradient(90deg, var(--deep-blue), var(--cyan));   /* accent words: deep blue to cyan */
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  padding-bottom: 0.16em;                /* keeps descenders from being clipped */
-  margin-bottom: -0.16em;
+  color: var(--deep-blue);               /* solid Deep Blue: strong contrast on Off White (was a Deep Blue to Cyan gradient) */
 }
 
 .hw__sub {
@@ -109,7 +103,7 @@
   gap: 10px;
   flex-shrink: 0;
   padding: 11px 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--color-primary);
   color: var(--color-on-primary);
   font-size: 14.5px;
@@ -233,7 +227,7 @@
   line-height: 1.2;
   font-weight: var(--fw-bold);
   letter-spacing: -0.02em;
-  color: var(--navy);
+  color: var(--color-heading);
 }
 
 .hw-step__text {
@@ -256,7 +250,7 @@
 
 .hw-step--final:hover {
   border-color: transparent;
-  box-shadow: 0 24px 44px -22px color-mix(in srgb, var(--navy) 90%, black);
+  box-shadow: 0 24px 44px -22px color-mix(in srgb, var(--navy) 90%, var(--almost-black));
 }
 
 /* explicit white: the global heading colour is navy and would vanish on the navy card */

@@ -1,4 +1,5 @@
 import './Footer.css';
+import { SectionLink } from '../../utils/SectionNav.jsx';
 
 const chips = [
   'Branding',
@@ -10,13 +11,13 @@ const chips = [
 ];
 
 const quickLinks = [
-  { label: 'Home', href: '#top' },
-  { label: 'What We Do', href: '#what-we-do' },
-  { label: 'Industries', href: '#industries' },
-  { label: 'Our Work', href: '#our-work' },
-  { label: 'About Us', href: '#why' },
-  { label: 'Insights', href: '#insights' },
-  { label: 'Contact', href: '#contact-us' },
+  { label: 'Home', to: '/' },
+  { label: 'What We Do', to: '/what-we-do' },
+  { label: 'Industries', to: '/industries' },
+  { label: 'Our Work', to: '/our-work' },
+  { label: 'About Us', to: '/about-us' },
+  { label: 'Insights', to: '/insights' },
+  { label: 'Contact', to: '/contact' },
 ];
 
 const social = [
@@ -71,9 +72,9 @@ export default function Footer() {
 
         {/* Brand */}
         <div className="ft-brand">
-          <a
+          <SectionLink
             className="ft-logo"
-            href="#top"
+            to="/"
             aria-label="Webrandustry Digital Solutions"
           >
             <i>W</i>
@@ -82,7 +83,7 @@ export default function Footer() {
               <b>Webrandustry</b>
               <small>Digital Solutions</small>
             </span>
-          </a>
+          </SectionLink>
 
           <p className="ft-tag">
             Building Brands. Creating Technology. Driving Growth.
@@ -102,7 +103,7 @@ export default function Footer() {
           <ul>
             {quickLinks.map((l) => (
               <li key={l.label}>
-                <a href={l.href}>{l.label}</a>
+                <SectionLink to={l.to}>{l.label}</SectionLink>
               </li>
             ))}
           </ul>
@@ -178,12 +179,12 @@ export default function Footer() {
 
       <div className="ft-bar">
         <p>
-          © Webrandustry Digital Solutions. All Rights Reserved.
+          © {new Date().getFullYear()} Webrandustry Digital Solutions. All Rights Reserved.
         </p>
 
-        <a
+        <SectionLink
           className="ft-top"
-          href="#top"
+          to="/"
           aria-label="Back to top"
         >
           Back to top
@@ -199,8 +200,20 @@ export default function Footer() {
           >
             <path d="M12 19V5M5 12l7-7 7 7" />
           </svg>
-        </a>
+        </SectionLink>
       </div>
+
+      {/* Developer credit */}
+      <p className="ft-credit">
+        Designed &amp; Developed by{' '}
+        <a
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Kloud Innovisionz
+        </a>
+      </p>
     </footer>
   );
 }
