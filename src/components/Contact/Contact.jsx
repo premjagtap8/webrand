@@ -110,25 +110,46 @@ const VALIDATORS = {
   },
 };
 
+/* Builds the https://wa.me link with the enquiry as the pre-filled message.
+   WhatsApp shows *text* in bold. Empty optional fields are left out. */
+const buildWhatsAppUrl = (number, v) => {
+  const clean = (x) => (x || "").trim();
+  const lines = [
+    "*New website enquiry*",
+    "",
+    `*Name:* ${clean(v.name)}`,
+    clean(v.company) ? `*Company:* ${clean(v.company)}` : null,
+    `*Email:* ${clean(v.email)}`,
+    `*Phone:* ${clean(v.phone)}`,
+    clean(v.service) ? `*Service:* ${clean(v.service)}` : null,
+    clean(v.message) ? `*Requirement:* ${clean(v.message)}` : null,
+  ].filter((line) => line !== null);
+
+  return `https://wa.me/${number.replace(/\D/g, "")}?text=${encodeURIComponent(lines.join("\n"))}`;
+};
+
 /*
   Props (all optional):
-  - phone / phoneHref : the number shown and its tel: link
+  - phone / phoneHref : the number shown in the chip and its tel: link
   - email             : address shown, also used for the mailto: link
-  - onSubmit(values)  : called with { name, company, email, phone, service, message }
-                        once the form is valid. Wire your API call (the Nodemailer
-                        "Send Enquiry" request) here. Return or await a promise:
-                        if it rejects or resolves to false, the form shows the
-                        "could not send" message; otherwise it shows the success panel.
+  - whatsappNumber    : the number that receives the enquiry, in international
+                        format with the country code and no + or spaces
+                        (India example: 919619272938)
+
+  No backend is used. On submit the form opens a WhatsApp chat to
+  `whatsappNumber` with the enquiry already typed in. The visitor still has to
+  press Send inside WhatsApp, so nothing is delivered until they do.
 */
 const Contact = ({
-  phone = "+91 00000 00000",
-  phoneHref = "tel:+910000000000",
-  email = "hello@yourdomain.com",
-  onSubmit,
+  phone = "+91 96192 72938",
+  phoneHref = "tel:+919619272938",
+  email = "hello@yourdomain.com", // TODO: replace with the real address before launch
+  whatsappNumber = "919619272938",
 }) => {
   const [errors, setErrors] = useState({}); // field -> message
   const [ok, setOk] = useState({}); // field -> true once it has been checked and is valid
-  const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [status, setStatus] = useState("idle"); // idle | success
+  const [waUrl, setWaUrl] = useState(""); // last link, so "Open WhatsApp again" works
   const [formKey, setFormKey] = useState(0); // bumping this clears the form
   const successRef = useRef(null);
 
@@ -165,9 +186,19 @@ const Contact = ({
       </p>
     ) : null;
 
-  const handleSubmit = async (e) => {
+  /* Opens WhatsApp. Must run straight from the click (no await before it),
+     otherwise browsers treat the new tab as a pop-up and block it. */
+  const openWhatsApp = (url) => {
+    const win = window.open(url, "_blank");
+    if (win) {
+      win.opener = null;
+    } else {
+      window.location.href = url; // pop-up blocked: open it in this tab instead
+    }
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (status === "sending") return;
 
     const form = e.currentTarget;
     const values = Object.fromEntries(new FormData(form));
@@ -185,33 +216,23 @@ const Contact = ({
     setOk(nextOk);
 
     if (firstBad) {
-      setStatus("idle");
       form.elements.namedItem(firstBad)?.focus();
       return;
     }
 
-    setStatus("sending");
-    try {
-      if (onSubmit) {
-        const result = await onSubmit(values);
-        if (result === false) throw new Error("Send failed");
-      } else {
-        console.warn("Contact: no onSubmit prop was passed, so nothing was sent.");
-      }
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
+    const url = buildWhatsAppUrl(whatsappNumber, values);
+    setWaUrl(url);
+    openWhatsApp(url);
+    setStatus("success");
   };
 
   const reset = () => {
     setErrors({});
     setOk({});
+    setWaUrl("");
     setStatus("idle");
     setFormKey((k) => k + 1);
   };
-
-  const sending = status === "sending";
 
   return (
     <section className="cnt" id="contact-us" aria-labelledby="cnt-title">
@@ -241,18 +262,26 @@ const Contact = ({
               <span className="cnt__success-icon">
                 <CheckIcon />
               </span>
-              <h3 className="cnt__success-title">Enquiry sent</h3>
+              <h3 className="cnt__success-title">Your enquiry is ready</h3>
               <p className="cnt__success-text">
-                Thanks for getting in touch. Our team will reply to the email address you gave us.
+                We&rsquo;ve opened WhatsApp with your details filled in. Tap Send there to
+                deliver it to our team.
               </p>
-              <button type="button" className="cnt__again" onClick={reset}>
-                Send another enquiry
-              </button>
+              <div className="cnt__actions">
+                <button type="button" className="cnt__again" onClick={() => openWhatsApp(waUrl)}>
+                  Open WhatsApp again
+                </button>
+                <button type="button" className="cnt__again" onClick={reset}>
+                  Send another enquiry
+                </button>
+              </div>
             </div>
           ) : (
             <>
               <form className="cnt__form" key={formKey} onSubmit={handleSubmit} noValidate>
-                <fieldset className="cnt__fieldset" disabled={sending}>
+                <fieldset className="cnt__fieldset">
+                  <legend className="cnt__sr">Enquiry details</legend>
+
                   <div className="cnt__row">
                     <div className={fieldClass("name")}>
                       <label htmlFor="cnt-name">
@@ -292,8 +321,11 @@ const Contact = ({
                         id="cnt-email"
                         name="email"
                         type="email"
+                        inputMode="email"
                         placeholder="you@company.com"
                         autoComplete="email"
+                        autoCapitalize="none"
+                        spellCheck={false}
                         required
                         {...ctl("email")}
                       />
@@ -335,29 +367,20 @@ const Contact = ({
                       id="cnt-message"
                       name="message"
                       rows={4}
+                      maxLength={1000}
                       placeholder="Tell us about your project…"
                     />
                   </div>
 
-                  {status === "error" && (
-                    <p className="cnt__banner" role="alert">
-                      <AlertIcon size={18} />
-                      <span>
-                        We couldn&rsquo;t send your enquiry. Please try again, or call or email us
-                        using the details on this page.
-                      </span>
-                    </p>
-                  )}
-
-                  <button className="cnt__submit" type="submit" aria-busy={sending}>
+                  <button className="cnt__submit" type="submit">
                     <SendIcon />
-                    {sending ? "Sending…" : "Send Enquiry"}
+                    Send Enquiry
                   </button>
                 </fieldset>
               </form>
 
               <p className="cnt__safe">
-                Your details are safe. No spam &mdash; only a tailored response from our team.
+                Tapping Send Enquiry opens WhatsApp with your message ready to send to our team.
               </p>
             </>
           )}

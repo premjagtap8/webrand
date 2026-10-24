@@ -20,6 +20,7 @@
   --cnt-muted: var(--color-text-muted);
   --cnt-line: var(--light-grey);
   --cnt-ease: var(--ease);
+  --cnt-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --cnt-gutter: clamp(16px, 3vw, 32px);
   /* small error / success text is darkened with navy so it passes contrast
      on white; borders and fills use the pure token colours */
@@ -39,6 +40,7 @@
   padding-block: clamp(32px, 5vw, 64px);
   padding-inline: var(--cnt-gutter);
   scroll-margin-top: 80px; /* #contact-us anchor clears a sticky header */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .cnt *,
@@ -61,12 +63,27 @@
   pointer-events: none;
 }
 
+/* visually hidden, still read by screen readers (fieldset legend) */
+.cnt__sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- Layout: copy left, form card right ---------- */
 .cnt__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
   align-items: center;
   gap: clamp(24px, 5vw, 72px);
+  /* FIX: cap the width so the layout doesn't over-stretch on large monitors */
+  max-inline-size: 1200px;
   margin-inline: auto;
 }
 
@@ -75,6 +92,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  min-width: 0; /* lets long words / emails shrink instead of pushing the grid wider */
 }
 
 .cnt__pill {
@@ -94,18 +112,20 @@
 .cnt__title {
   margin: 18px 0 0;
   font-family: var(--font-primary);
-  font-size: clamp(34px, 4.6vw, 56px);
+  font-size: clamp(2.125rem, 1.4rem + 3.2vw, 3.5rem); /* ~34px mobile to 56px desktop */
   line-height: 1.06;
   letter-spacing: -0.03em;
   font-weight: var(--fw-bold);
   color: var(--color-heading);
   font-optical-sizing: auto;
   text-wrap: balance;
+  overflow-wrap: break-word;
 }
 
 .cnt__accent {
   display: block; /* "Something Together." sits on its own line */
   inline-size: fit-content; /* so the gradient spans the words, not the whole row */
+  max-inline-size: 100%;
   color: var(--deep-blue);
   /* keeps descenders (g, y, p) from being clipped by the gradient text */
   padding-bottom: 0.16em;
@@ -127,9 +147,9 @@
   margin: 16px 0 0;
   max-width: 40ch;
   color: var(--cnt-muted);
-  font-size: clamp(16px, 1.3vw, 19px);
-  line-height: 1.5;
-  text-wrap: balance;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.1875rem);
+  line-height: 1.55;
+  text-wrap: pretty;
 }
 
 .cnt__chips {
@@ -137,12 +157,14 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-block-start: clamp(22px, 3vw, 32px);
+  max-inline-size: 100%;
 }
 
 .cnt__chip {
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  min-block-size: 56px; /* comfortable touch target */
   padding: 10px 22px 10px 10px;
   border: 1px solid var(--cnt-line);
   border-radius: var(--radius-lg);
@@ -153,6 +175,8 @@
   font-variant-numeric: tabular-nums;
   text-decoration: none;
   overflow-wrap: anywhere;
+  min-width: 0;
+  touch-action: manipulation;
   transition:
     transform 0.3s var(--cnt-ease),
     border-color 0.2s,
@@ -180,6 +204,7 @@
 .cnt__card {
   position: relative;
   container-type: inline-size; /* the field rows react to the card's width, not the screen's */
+  min-width: 0;
   padding: clamp(20px, 2.4vw, 32px);
   border: 1px solid var(--cnt-line);
   border-radius: var(--radius-lg);
@@ -240,6 +265,8 @@
   gap: 18px;
 }
 
+/* FIX: switch to one column based on the card's width (container query).
+   Between 901px and ~1100px the card is narrow even though the screen is wide. */
 @container (max-width: 520px) {
   .cnt__row {
     grid-template-columns: 1fr;
@@ -253,11 +280,11 @@
   min-width: 0;
 }
 
+/* FIX: sentence-case 14px labels (were 12px tracked caps: hard to read, esp. on mobile) */
 .cnt__field label {
-  font-size: 12px;
+  font-size: 0.875rem;
   font-weight: var(--fw-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  line-height: 1.3;
   color: var(--cnt-ink);
   transition: color 0.2s;
 }
@@ -269,10 +296,8 @@
 
 .cnt__field label small {
   margin-inline-start: 4px;
-  font-size: 11px;
+  font-size: 0.8125rem; /* FIX: was 11px */
   font-weight: var(--fw-medium);
-  letter-spacing: 0;
-  text-transform: none;
   color: var(--cnt-muted);
 }
 
@@ -290,6 +315,7 @@
   background-color: var(--white);
   color: var(--cnt-ink);
   caret-color: var(--cyan);
+  accent-color: var(--cyan);
   font: inherit;
   font-size: 16px; /* 16px stops iOS from zooming in on focus */
   transition: border-color 0.2s, box-shadow 0.25s, background-color 0.2s, color 0.2s;
@@ -301,10 +327,12 @@
   padding-inline: 20px;
 }
 
+/* FIX: placeholder was muted at 70% opacity (about 3:1 contrast, fails WCAG AA).
+   Full-strength muted colour passes and is still clearly lighter than typed text. */
 .cnt__field input::placeholder,
 .cnt__field textarea::placeholder {
   color: var(--cnt-muted);
-  opacity: 0.7;
+  opacity: 1;
 }
 
 /* hover */
@@ -390,7 +418,7 @@
   gap: 6px;
   margin: 0;
   color: var(--cnt-error-text);
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: var(--fw-medium);
   line-height: 1.4;
 }
@@ -454,6 +482,7 @@
   font-size: 16px;
   font-weight: var(--fw-semibold);
   cursor: pointer;
+  touch-action: manipulation;
   box-shadow: var(--shadow-cta);
   transition:
     background 0.2s,
@@ -478,7 +507,7 @@
 }
 
 .cnt__submit:active {
-  transform: scale(0.99);
+  transform: scale(0.98);
 }
 
 .cnt__submit:focus-visible {
@@ -501,7 +530,7 @@
   margin: 14px 0 0;
   text-align: center;
   color: var(--cnt-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.5;
   text-wrap: balance;
 }
@@ -511,9 +540,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* FIX: centre inside the card ... */
   gap: 12px;
+  /* ... and keep a stable height so the card doesn't collapse and jump the layout
+     when the form (about 600px tall) is swapped for this short panel */
+  min-block-size: clamp(320px, 38vw, 440px);
   padding: clamp(16px, 3vw, 32px) 0;
   text-align: center;
+  animation: cnt-pop 0.5s var(--cnt-ease) both;
 }
 .cnt__success:focus {
   outline: none;
@@ -526,6 +560,7 @@
   border-radius: 50%;
   background: rgba(31, 157, 107, 0.12);
   color: var(--color-success);
+  animation: cnt-badge 0.6s 0.1s var(--cnt-spring) both;
 }
 /* heading colour is set explicitly */
 .cnt__success-title {
@@ -533,16 +568,27 @@
   font-size: var(--fs-h3);
   font-weight: var(--fw-bold);
   color: var(--color-heading);
+  text-wrap: balance;
 }
 .cnt__success-text {
   margin: 0;
   max-width: 38ch;
   color: var(--cnt-muted);
   line-height: 1.55;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
-.cnt__again {
+
+/* the two follow-up buttons sit side by side, wrap on narrow cards */
+.cnt__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
   margin-block-start: 8px;
+}
+
+.cnt__again {
+  min-block-size: 48px; /* touch target */
   padding: 12px 24px;
   border: 1px solid var(--cnt-line);
   border-radius: var(--radius-pill);
@@ -552,11 +598,48 @@
   font-size: 14.5px;
   font-weight: var(--fw-semibold);
   cursor: pointer;
+  touch-action: manipulation;
   transition: border-color 0.2s, background 0.2s, transform 0.25s var(--cnt-ease), box-shadow 0.25s;
+}
+.cnt__again:active {
+  transform: scale(0.98);
 }
 .cnt__again:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 3px;
+}
+
+/* stack the buttons full-width when the card is narrow (phones) */
+@container (max-width: 420px) {
+  .cnt__actions {
+    flex-direction: column;
+    align-self: stretch;
+  }
+  .cnt__again {
+    inline-size: 100%;
+  }
+}
+
+@keyframes cnt-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cnt-badge {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ---------- Interactions (only where hover really exists) ---------- */
@@ -619,13 +702,20 @@
 }
 
 /* ---------- Responsive ---------- */
+
+/* Tablet and below: stack copy above the form */
 @media (max-width: 900px) {
   .cnt__inner {
     grid-template-columns: 1fr;
     align-items: start;
+    gap: clamp(24px, 4vw, 40px);
+  }
+  .cnt__sub {
+    max-width: 52ch; /* a little more room now the column is full width */
   }
 }
 
+/* Phones */
 @media (max-width: 560px) {
   .cnt {
     border-radius: 24px;
@@ -636,6 +726,20 @@
   }
   .cnt__chip {
     justify-content: flex-start;
+  }
+}
+
+/* Very small phones (320px): tighter padding so nothing is squeezed */
+@media (max-width: 360px) {
+  .cnt {
+    padding-inline: 12px;
+  }
+  .cnt__card {
+    padding: 16px;
+  }
+  .cnt__field input,
+  .cnt__field select {
+    padding-inline: 16px;
   }
 }
 
@@ -651,7 +755,8 @@
   .cnt__chip:hover svg,
   .cnt__submit:hover,
   .cnt__submit:active,
-  .cnt__again:hover {
+  .cnt__again:hover,
+  .cnt__again:active {
     transform: none;
   }
 }
