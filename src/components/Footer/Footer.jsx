@@ -23,7 +23,7 @@ const quickLinks = [
 const social = [
   {
     label: 'LinkedIn',
-    href: '#',
+    href: 'https://www.linkedin.com/company/webrandustry/',
     icon: (
       <>
         <path d="M6.5 9.5v8M6.5 6.2v.1M11 17.5v-8M11 12.8c0-2 1.3-3.3 3-3.3s2.8 1.1 2.8 3.2v4.8" />
@@ -33,7 +33,7 @@ const social = [
   },
   {
     label: 'Instagram',
-    href: '#',
+    href: 'https://www.instagram.com/webrandustry_apps/',
     icon: (
       <>
         <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -44,7 +44,7 @@ const social = [
   },
   {
     label: 'Facebook',
-    href: '#',
+    href: 'https://www.facebook.com/WeBrandustry/',
     icon: (
       <path d="M14 8.5h2.5V5H14a3.5 3.5 0 0 0-3.5 3.5V11H8v3.5h2.5V21H14v-6.5h2.4l.6-3.5H14V8.8c0-.2.1-.3.3-.3z" />
     ),
@@ -137,8 +137,8 @@ export default function Footer() {
                 </Icon>
               </span>
 
-              <a href="mailto:hello@yourdomain.com">
-                hello@yourdomain.com
+              <a href="mailto:enquiry@webrandustry.com">
+                enquiry@webrandustry.com
               </a>
             </li>
 
@@ -162,17 +162,28 @@ export default function Footer() {
           <h4>Follow Us</h4>
 
           <ul className="ft-social">
-            {social.map((s) => (
-              <li key={s.label}>
-                <a href={s.href} aria-label={s.label}>
-                  <span className="ft-ico">
-                    <Icon>{s.icon}</Icon>
-                  </span>
+            {social.map((s) => {
+              const isExternal = s.href !== '#';
 
-                  <span>{s.label}</span>
-                </a>
-              </li>
-            ))}
+              return (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    aria-label={s.label}
+                    {...(isExternal && {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    })}
+                  >
+                    <span className="ft-ico">
+                      <Icon>{s.icon}</Icon>
+                    </span>
+
+                    <span>{s.label}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
