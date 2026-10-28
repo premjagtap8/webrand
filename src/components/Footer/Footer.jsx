@@ -123,9 +123,29 @@ export default function Footer() {
                 </Icon>
               </span>
 
-              <a href="https://wa.me/919619272938">
-                +91 96192 72938
-              </a>
+              <span className="ft-phones">
+                <a
+                  href="https://wa.me/919619272938"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  +91 96192 72938
+                </a>
+                <a
+                  href="https://wa.me/919892400563"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  +91 98924 00563
+                </a>
+                <a
+                  href="https://wa.me/919594865555"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  +91 95948 65555
+                </a>
+              </span>
             </li>
 
             {/* Email */}
@@ -151,7 +171,20 @@ export default function Footer() {
                 </Icon>
               </span>
 
-              <span>Your address, City, State</span>
+              <address>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=B%2F60%2C%201st%20Floor%2C%20Madhugiri%20Apartments%2C%20VN%20Purav%20Marg%2C%20Borla%2C%20Union%20Park%2C%20Chembur%2C%20Mumbai%2C%20Maharashtra%20400071"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View our address on Google Maps"
+                >
+                  B/60, 1st Floor, Madhugiri Apartments,
+                  <br />
+                  VN Purav Marg, Borla, Union Park,
+                  <br />
+                  Chembur, Mumbai, Maharashtra 400071
+                </a>
+              </address>
             </li>
 
           </ul>

@@ -71,7 +71,7 @@ function Home() {
         onSubmit={sendEnquiry}
         phone="+91 96192 72938"
         phoneHref="https://wa.me/919619272938"
-        email="hello@yourdomain.com"
+        email="enquiry@webrandustry.com"
       />
     </>
   )

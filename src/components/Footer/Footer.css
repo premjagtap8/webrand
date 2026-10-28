@@ -253,9 +253,31 @@
  
 /* long emails / addresses wrap instead of overflowing */
 .ft-contact li > a,
-.ft-contact li > span:last-child {
+.ft-contact li > span:last-child,
+.ft-contact li > address {
   min-width: 0;
   overflow-wrap: anywhere;
+  transition: color 0.2s;
+}
+ 
+/* <address> is italic by default: reset it so it matches the other contact lines */
+.ft-contact address {
+  margin: 0;
+  font-style: normal;
+}
+ 
+.ft-contact address a {
+  transition: color 0.2s;
+}
+
+/* several phone numbers stacked beside one icon */
+.ft-phones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ft-phones a {
   transition: color 0.2s;
 }
  
@@ -347,6 +369,8 @@
   }
  
   .ft-contact li > a:hover,
+  .ft-contact address a:hover,
+  .ft-phones a:hover,
   .ft-social a:hover {
     color: var(--color-link-on-dark);
   }
@@ -482,4 +506,3 @@
     border: 1px solid CanvasText;
   }
 }
- 

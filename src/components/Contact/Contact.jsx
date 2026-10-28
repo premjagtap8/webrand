@@ -143,7 +143,7 @@ const buildWhatsAppUrl = (number, v) => {
 const Contact = ({
   phone = "+91 96192 72938",
   phoneHref = "tel:+919619272938",
-  email = "hello@yourdomain.com", // TODO: replace with the real address before launch
+  email = "enquiry@webrandustry.com",
   whatsappNumber = "919619272938",
 }) => {
   const [errors, setErrors] = useState({}); // field -> message
