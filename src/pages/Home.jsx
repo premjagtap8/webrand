@@ -1,6 +1,17 @@
 import { useEffect } from 'react';
 import './Home.css';
 
+
+
+
+
+
+
+
+
+
+
+
 export default function Home() {
   // All the interactions (nav menu + scroll-spy, How-we-work stepper, service tabs,
   // work / insights filters, case-study switcher, reveal-on-scroll) are wired here
