@@ -157,8 +157,8 @@ export default function Footer() {
                 </Icon>
               </span>
 
-              <a href="mailto:info@kloudinnovisionz.com">
-                info@kloudinnovisionz.com
+              <a href="mailto:contact@webrandustry.com">
+                contact@webrandustry.com
               </a>
             </li>
 
